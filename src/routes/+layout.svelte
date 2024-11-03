@@ -6,8 +6,6 @@
 		{ name: 'Katalog', href: '/catalog' },
 		{ name: 'O nama', href: '/about' },
 	];
-
-	
 </script>
 
 
