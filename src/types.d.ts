@@ -18,3 +18,11 @@ type KategorijaTree = {
   siblings: Kategorija[];
   children: Kategorija[];
 };
+
+// Tags
+
+type Tag = {
+  id: string;
+  naziv: string;
+  items?: [];
+};
