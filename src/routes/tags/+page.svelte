@@ -16,10 +16,24 @@
 
   $inspect(comboboxValues);
 
-  async function handleAddOption(option: string) {
+  async function handleAddOption(option: string): Promise<{
+    label: string;
+    value: string;
+  }> {
     const response = await kolekcionarApi.createTag({ naziv: option });
 
-    alert(response.message);
+    console.log(response);
+
+    if (!response.data) {
+      throw new Error(response.message);
+    }
+
+    // If it contains necessary fields (id and naziv, both strings)
+    if (!response.data.id || !response.data.naziv) {
+      throw new Error("Invalid response data");
+    }
+
+    return { label: response.data.naziv, value: response.data.id };
   }
 </script>
 
@@ -27,7 +41,7 @@
 
 <AdminCombobox
   label="Tags"
-  options={tagOptions.map((tag) => tag.naziv)}
-  bind:values={comboboxValues}
+  options={tagOptions.map((tag) => ({ label: tag.naziv, value: tag.id }))}
+  bind:selectedValues={comboboxValues}
   onAddOption={handleAddOption}
 />

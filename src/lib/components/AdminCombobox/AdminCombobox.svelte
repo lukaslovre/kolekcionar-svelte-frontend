@@ -4,55 +4,71 @@
 
   type AdminComboboxProps = {
     label: string;
-    options: string[];
-    values: string[];
-    onAddOption: (option: string) => void;
+    options: {
+      label: string;
+      value: string;
+    }[];
+    selectedValues: string[];
+    onAddOption: (optionLabel: string) => Promise<{
+      label: string;
+      value: string;
+    }>;
   };
-
   let {
     label,
     options,
-    values = $bindable(),
+    selectedValues = $bindable(),
     onAddOption,
   }: AdminComboboxProps = $props();
 
-  let isOpen: boolean = $state(true);
+  let isOpen: boolean = $state(false);
   let searchValue: string = $state("");
 
   let filteredOptions = $derived(
-    options.filter((option) => option.includes(searchValue))
+    options.filter(({ value, label }) =>
+      label.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
+    )
   );
 
   function toggleValue(value: string) {
-    if (values.includes(value)) {
-      values = values.filter((v) => v !== value);
+    if (selectedValues.includes(value)) {
+      selectedValues = selectedValues.filter((v) => v !== value);
     } else {
-      values = [...values, value];
+      selectedValues = [...selectedValues, value];
     }
   }
 
-  function createOption() {
-    onAddOption(searchValue);
+  async function createOption() {
+    try {
+      const newTag = await onAddOption(searchValue);
+      options = [...options, newTag];
+    } catch (error) {
+      console.error(error);
+    }
   }
 </script>
 
-<div class="flex flex-col gap-1">
+<div class="relative">
   <button
-    class="bg-white px-4 py-3 rounded-md border font-medium text-sm {isOpen
+    class="bg-white px-4 py-3 rounded-md border font-medium text-sm w-full {isOpen
       ? 'border-sky-700'
-      : 'border-neutral-400'}"
+      : 'border-neutral-400'} transition-colors"
     type="button"
     onclick={() => {
       isOpen = !isOpen;
     }}
   >
-    {values.length > 0 ? values.join(", ") : "Select tags"}
+    {selectedValues.length > 0
+      ? selectedValues
+          .map((value) => options.find((option) => option.value === value)?.label || "")
+          .join(", ")
+      : `Select ${label}`}
   </button>
 
   <!-- Dropdown options container -->
   {#if isOpen}
     <div
-      class="flex flex-col gap-1 p-1 bg-white rounded-md border border-neutral-400 shadow-md"
+      class="absolute top-full mt-2 w-full flex flex-col gap-1 p-1 bg-white rounded-md border border-neutral-400 shadow-md"
     >
       <!-- Search -->
       <div class="flex gap-2 items-center px-3 py-2">
@@ -74,16 +90,16 @@
       </div>
 
       <!-- Options -->
-      {#each filteredOptions as option (option)}
+      {#each filteredOptions as { label, value } (value)}
         <button
           type="button"
           class="px-3 py-2 hover:bg-neutral-100 rounded-sm font-normal text-sm flex gap-2 items-center"
           onclick={() => {
-            toggleValue(option);
+            toggleValue(value);
           }}
         >
-          <Checkmark color={values.includes(option) ? "#000" : "transparent"} />
-          {option}
+          <Checkmark color={selectedValues.includes(value) ? "#000" : "transparent"} />
+          {label}
         </button>
       {/each}
     </div>
