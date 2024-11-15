@@ -9,6 +9,7 @@
       value: string;
     }[];
     selectedValues: string[];
+    onSelectedChange: (selectedValues: string[]) => void;
     onAddOption: (optionLabel: string) => Promise<{
       label: string;
       value: string;
@@ -17,7 +18,8 @@
   let {
     label,
     options,
-    selectedValues = $bindable(),
+    selectedValues,
+    onSelectedChange,
     onAddOption,
   }: AdminComboboxProps = $props();
 
@@ -31,11 +33,12 @@
   );
 
   function toggleValue(value: string) {
-    if (selectedValues.includes(value)) {
-      selectedValues = selectedValues.filter((v) => v !== value);
-    } else {
-      selectedValues = [...selectedValues, value];
-    }
+    const newSelectedValues = selectedValues.includes(value)
+      ? selectedValues.filter((v) => v !== value)
+      : [...selectedValues, value];
+
+    selectedValues = newSelectedValues;
+    onSelectedChange(newSelectedValues);
   }
 
   async function createOption() {

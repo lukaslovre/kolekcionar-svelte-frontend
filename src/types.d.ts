@@ -26,3 +26,40 @@ type Tag = {
   naziv: string;
   items?: [];
 };
+
+// Item
+interface Item {
+  id: number;
+  cijena: number;
+  limit: number;
+  nazivId: string;
+  kategorijaId: string;
+  opis?: string;
+  tags: {
+    id: string;
+    naziv: string;
+  }[];
+  images: {
+    id: string;
+    url: string;
+    itemId: number;
+  }[];
+  vrijemeDodavanja: Date;
+  tip: string;
+  nominala?: number;
+  valuta?: string;
+  godina?: number;
+  kralj?: string;
+  mintage?: number;
+  materijal?: string;
+  promjer?: number;
+  masa?: number;
+  kvaliteta?: string;
+  pick?: string;
+  serija?: string;
+  naselje?: string;
+  vrstaKamena?: string;
+  visina?: number;
+  sirina?: number;
+  duljina?: number;
+}

@@ -1,5 +1,6 @@
 <script lang="ts">
   import CategoryTree from "$lib/components/CategoryTree/CategoryTree.svelte";
+  import ItemCard from "$lib/components/ItemCard/ItemCard.svelte";
   import kolekcionarApi from "$lib/kolekcionarApi";
 
   let categoryTree: KategorijaTree | undefined = $state();
@@ -21,6 +22,20 @@
 
     categoryTree = data;
   }
+
+  // Items
+
+  let items: Item[] = $state([]);
+
+  async function getItems() {
+    const { data } = await kolekcionarApi.getItemsAll();
+    console.log(data);
+    items = data;
+  }
+
+  $effect(() => {
+    getItems();
+  });
 </script>
 
 <h1>Welcome to SvelteKit</h1>
@@ -33,3 +48,9 @@
 {:else}
   <p>Loading...</p>
 {/if}
+
+<section class="flex flex-wrap gap-8">
+  {#each items as item}
+    <ItemCard {item} />
+  {/each}
+</section>

@@ -1,7 +1,10 @@
 <script lang="ts">
+  import kolekcionarApi from "$lib/kolekcionarApi";
+  import TagsCombobox from "$lib/wrappedComponents/TagsCombobox.svelte";
+
   // Types
-  type FieldType = "text" | "number" | "textarea";
-  type Parser = (value: FormDataEntryValue | null) => string | number;
+  type FieldType = "text" | "number" | "textarea" | "tagsCombobox";
+  type Parser = (value: FormDataEntryValue | null) => string | number | string[];
 
   interface FieldConfig {
     id: string;
@@ -14,6 +17,18 @@
       rows?: number;
     };
   }
+
+  const imageUrlsParseFunction: Parser = (value) => {
+    if (!value || typeof value !== "string") return "";
+
+    // Split by comma or new line, trim each item and remove empty strings
+    const urls = value
+      .split(/,|\n/)
+      .map((url) => url.trim())
+      .filter(Boolean);
+
+    return urls;
+  };
 
   const fields: FieldConfig[] = [
     { id: "id", label: "ID", type: "number", parse: Number },
@@ -34,8 +49,13 @@
     },
     { id: "kategorijaId", label: "Kategorija ID", type: "text", parse: String },
     { id: "opis", label: "Opis", type: "textarea", parse: String, options: { rows: 4 } },
-    { id: "tags", label: "Tags", type: "text", parse: String },
-    { id: "images", label: "Images", type: "text", parse: String },
+    { id: "tags", label: "Tags", type: "tagsCombobox", parse: String },
+    {
+      id: "images",
+      label: "Images (svaki url u svoj red ili odvojen zarezom)",
+      type: "textarea",
+      parse: imageUrlsParseFunction,
+    },
     { id: "nominala", label: "Nominala", type: "number", parse: Number },
     { id: "valuta", label: "Valuta", type: "text", parse: String },
     { id: "godina", label: "Godina", type: "number", parse: Number },
@@ -54,7 +74,7 @@
     { id: "duljina", label: "Duljina", type: "number", parse: Number },
   ];
 
-  function handleSubmit(event: Event) {
+  async function handleSubmit(event: Event) {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
 
@@ -68,18 +88,33 @@
       {}
     );
 
+    parsedData.tags = tagsSelectedValues.length > 0 ? tagsSelectedValues : undefined;
+
     console.log(parsedData);
+
+    const response = await kolekcionarApi.createItem(parsedData);
+
+    console.log(response);
+  }
+
+  let tagsSelectedValues: string[] = $state([]);
+
+  function handleTagsComboboxSelectedChange(values: string[]) {
+    console.log(values);
+    tagsSelectedValues = values;
   }
 </script>
 
 <h1>Items</h1>
 
-<form on:submit={handleSubmit}>
+<form onsubmit={handleSubmit}>
   {#each fields as field}
     <label for={field.id}>{field.label}</label>
 
     {#if field.type === "textarea"}
       <textarea id={field.id} name={field.id} rows={field.options?.rows}></textarea>
+    {:else if field.type === "tagsCombobox"}
+      <TagsCombobox onSelectedChange={handleTagsComboboxSelectedChange} />
     {:else}
       <input
         type="text"

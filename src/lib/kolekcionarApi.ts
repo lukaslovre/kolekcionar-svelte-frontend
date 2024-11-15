@@ -41,6 +41,25 @@ class kolekcionarApi {
 
     return response.json();
   }
+
+  // Items
+
+  static async getItemsAll(): Promise<ApiResponse<Item[]>> {
+    const response = await fetch(`${this.baseUrl}/item`);
+    return response.json();
+  }
+
+  static async createItem(itemData: any) {
+    const response = await fetch(`${this.baseUrl}/item`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(itemData),
+    });
+
+    return response.json();
+  }
 }
 
 export default kolekcionarApi;
