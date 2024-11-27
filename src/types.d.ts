@@ -8,15 +8,19 @@ type Kategorija = {
 	count?: number | undefined;
 };
 
-type KategorijaWithLevel = Kategorija & {
+type KategorijaWithCount = Kategorija & {
+	totalItems?: number;
+};
+
+type KategorijaWithLevel = KategorijaWithCount & {
 	level: number;
 };
 
 type KategorijaTree = {
 	selectedCategory: Kategorija;
 	parents: KategorijaWithLevel[];
-	siblings: Kategorija[];
-	children: Kategorija[];
+	siblings: KategorijaWithCount[];
+	children: KategorijaWithCount[];
 };
 
 // Tags
@@ -62,4 +66,9 @@ interface Item {
 	visina?: number;
 	sirina?: number;
 	duljina?: number;
+}
+
+interface ApiResponse<T> {
+	message: string;
+	data: T;
 }

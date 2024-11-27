@@ -6,9 +6,8 @@
 		depth = 0,
 		onclick
 	}: {
-		category: Kategorija;
+		category: KategorijaTree['children'][0];
 		depth?: number;
-
 		onclick?: () => void;
 	} = $props();
 </script>
@@ -21,5 +20,7 @@
 >
 	<Chevron color={'#0a0a0a'} size={24} rotate={-90} />
 
-	<span class="text-base font-medium text-neutral-950">{category.nazivId}</span>
+	<span class="text-base font-medium text-neutral-950"
+		>{category.nazivId} ({category.totalItems})</span
+	>
 </button>

@@ -10,7 +10,7 @@
 		current = false,
 		onclick
 	}: {
-		category: Kategorija;
+		category: KategorijaTree['siblings'][0];
 		depth?: number;
 		current?: boolean;
 		onclick?: () => void;
@@ -49,7 +49,7 @@
 	<Chevron color={current ? '#fff' : '#525252'} size={24} rotate={current ? 0 : -90} />
 
 	<span class="text-base font-medium {current ? 'text-neutral-50' : 'text-neutral-600'}">
-		{category.nazivId}
+		{category.nazivId} ({category.totalItems})
 	</span>
 
 	<span

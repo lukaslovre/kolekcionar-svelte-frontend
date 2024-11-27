@@ -8,7 +8,10 @@
 	let { item }: ItemCardProps = $props();
 </script>
 
-<div class="flex min-w-40 max-w-80 flex-1 flex-col rounded border border-neutral-300 bg-white">
+<a
+	href={`/proizvod/${item.id}`}
+	class="flex min-w-40 max-w-80 flex-1 flex-col rounded border border-neutral-300 bg-white"
+>
 	<img
 		src={item.images.at(0)?.url || 'item-default-img.jpg'}
 		alt={item.nazivId}
@@ -26,4 +29,4 @@
 		{/if}
 		<h2 class="text-neutral-800">{item.nazivId}</h2>
 	</div>
-</div>
+</a>
