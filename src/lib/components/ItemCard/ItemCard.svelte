@@ -8,12 +8,9 @@
 	let { item }: ItemCardProps = $props();
 </script>
 
-<a
-	href={`/proizvod/${item.id}`}
-	class="flex min-w-40 max-w-80 flex-1 flex-col rounded border border-neutral-300 bg-white"
->
+<a href={`/proizvod/${item.id}`} class="flex flex-col rounded border border-neutral-300 bg-white">
 	<img
-		src={item.images.at(0)?.url || 'item-default-img.jpg'}
+		src={item.images?.at(0)?.url || '/item-default-img.jpg'}
 		alt={item.nazivId}
 		class="h-64 w-full rounded object-cover"
 	/>

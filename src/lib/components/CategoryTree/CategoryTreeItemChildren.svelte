@@ -12,15 +12,15 @@
 	} = $props();
 </script>
 
-<button
+<a
 	class="flex items-center gap-2 rounded-lg p-3"
 	style={`padding-left: ${0.75 + depth * 1.5}rem;`}
 	type="button"
-	{onclick}
+	href={`/katalog/${category.id}`}
 >
 	<Chevron color={'#0a0a0a'} size={24} rotate={-90} />
 
 	<span class="text-base font-medium text-neutral-950"
 		>{category.nazivId} ({category.totalItems})</span
 	>
-</button>
+</a>

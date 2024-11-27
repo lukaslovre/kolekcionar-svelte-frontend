@@ -4,24 +4,18 @@
 	import ItemCard from '$lib/components/ItemCard/ItemCard.svelte';
 	import kolekcionarApi from '$lib/kolekcionarApi';
 
-	let categoryTree: KategorijaTree | undefined = $state();
+	import type { PageData } from './$types';
 
-	$effect(() => {
-		getKategorije();
-	});
+	type PageProps = {
+		data: PageData;
+	};
 
-	async function getKategorije() {
-		const { data } = await kolekcionarApi.getKategorijaFromRoot();
-		console.log(data);
-
-		categoryTree = data;
-	}
+	let { data }: PageProps = $props();
 
 	async function fetchCategoryTreeFromId(id: string) {
-		const { data } = await kolekcionarApi.getKategorijaById(id);
-		console.log(data);
-
-		categoryTree = data;
+		// const { data } = await kolekcionarApi.getKategorijaById(id);
+		// console.log(data);
+		// categoryTree = data;
 	}
 
 	// Items
@@ -38,24 +32,24 @@
 	}
 
 	$effect(() => {
-		if (categoryTree) {
-			getItems(categoryTree.selectedCategory.id);
+		if (data.categoryTree) {
+			getItems(data.categoryTree.selectedCategory.id);
 		}
 	});
 </script>
 
 <main class="flex gap-20">
 	<nav class="w-80 shrink-0">
-		{#if categoryTree}
-			<CategoryTree {categoryTree} {fetchCategoryTreeFromId} />
+		{#if data.categoryTree}
+			<CategoryTree categoryTree={data.categoryTree} {fetchCategoryTreeFromId} />
 		{:else}
 			<p>Loading...</p>
 		{/if}
 	</nav>
 
 	<section class="flex-1 overflow-y-auto">
-		{#if categoryTree?.selectedCategory?.opis}
-			<CategoryDescription title="Povijest" text={categoryTree.selectedCategory.opis} />
+		{#if data.categoryTree?.selectedCategory?.opis}
+			<CategoryDescription title="Povijest" text={data.categoryTree.selectedCategory.opis} />
 		{/if}
 
 		{#if itemsLoading}

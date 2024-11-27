@@ -3,7 +3,7 @@
 	let { children } = $props();
 
 	const navItems = [
-		{ name: 'Katalog', href: '/catalog' },
+		{ name: 'Katalog', href: '/katalog' },
 		{ name: 'O nama', href: '/about' },
 		{ name: 'item', href: '/admin/item' }
 	];
@@ -27,7 +27,7 @@
 	</div>
 </header>
 
-<main class="mx-auto max-w-screen-lg px-4 py-12">
+<main class="mx-auto max-w-screen-xl border px-4 py-12">
 	{@render children()}
 </main>
 

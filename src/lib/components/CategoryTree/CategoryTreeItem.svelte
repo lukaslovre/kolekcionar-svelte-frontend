@@ -39,12 +39,12 @@
 	}
 </script>
 
-<button
+<a
 	class="relative flex items-center gap-2 rounded-lg p-3"
 	class:bg-red-700={current}
 	style={`padding-left: ${0.75 + depth * 1.5}rem;`}
 	type="button"
-	{onclick}
+	href={`/katalog/${category.id}`}
 >
 	<Chevron color={current ? '#fff' : '#525252'} size={24} rotate={current ? 0 : -90} />
 
@@ -52,16 +52,11 @@
 		{category.nazivId} ({category.totalItems})
 	</span>
 
-	<span
-		class="absolute right-3 cursor-pointer"
-		onclick={handleCopyClick}
-		role="button"
-		tabindex="0"
-	>
+	<button class="absolute right-3 cursor-pointer" onclick={handleCopyClick} tabindex="0">
 		{#if copySuccess}
 			<Checkmark />
 		{:else}
 			<CopyIcon />
 		{/if}
-	</span>
-</button>
+	</button>
+</a>
