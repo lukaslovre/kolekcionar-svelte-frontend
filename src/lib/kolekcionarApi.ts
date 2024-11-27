@@ -49,6 +49,12 @@ class kolekcionarApi {
 		return response.json();
 	}
 
+	static async getItemsUnderCategory(categoryId: string): Promise<ApiResponse<Item[]>> {
+		// /underCategory/:categoryId
+		const response = await fetch(`${this.baseUrl}/item/underCategory/${categoryId}`);
+		return response.json();
+	}
+
 	static async createItem(itemData: any) {
 		const response = await fetch(`${this.baseUrl}/item`, {
 			method: 'POST',

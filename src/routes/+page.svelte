@@ -26,31 +26,39 @@
 	// Items
 
 	let items: Item[] = $state([]);
+	let itemsLoading: boolean = $state(false);
 
-	async function getItems() {
-		const { data } = await kolekcionarApi.getItemsAll();
+	async function getItems(categoryId: string) {
+		itemsLoading = true;
+		const { data } = await kolekcionarApi.getItemsUnderCategory(categoryId);
 		console.log(data);
+		itemsLoading = false;
 		items = data;
 	}
 
 	$effect(() => {
-		getItems();
+		if (categoryTree) {
+			getItems(categoryTree.selectedCategory.id);
+		}
 	});
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>
-	Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation
-</p>
+<main class="flex gap-20">
+	<nav class="w-80 shrink-0">
+		{#if categoryTree}
+			<CategoryTree {categoryTree} {fetchCategoryTreeFromId} />
+		{:else}
+			<p>Loading...</p>
+		{/if}
+	</nav>
 
-{#if categoryTree}
-	<CategoryTree {categoryTree} {fetchCategoryTreeFromId} />
-{:else}
-	<p>Loading...</p>
-{/if}
-
-<section class="flex flex-wrap gap-8">
-	{#each items as item}
-		<ItemCard {item} />
-	{/each}
-</section>
+	<section class="flex flex-1 flex-wrap gap-8">
+		{#if itemsLoading}
+			<p>Loading...</p>
+		{:else}
+			{#each items as item (item.id)}
+				<ItemCard {item} />
+			{/each}
+		{/if}
+	</section>
+</main>

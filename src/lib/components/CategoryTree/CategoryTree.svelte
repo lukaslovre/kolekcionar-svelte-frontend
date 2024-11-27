@@ -13,7 +13,7 @@
 	$inspect(maxDepth);
 </script>
 
-<div class="flex flex-col gap-1">
+<div class="flex w-full flex-col gap-1">
 	{#each categoryTree.parents as category (category.id)}
 		<CategoryTreeItemParent
 			{category}
