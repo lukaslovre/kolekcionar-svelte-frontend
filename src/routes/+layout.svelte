@@ -4,6 +4,7 @@
 
 	const navItems = [
 		{ name: 'Katalog', href: '/katalog' },
+		{ name: 'Tags', href: '/tags' },
 		{ name: 'O nama', href: '/about' },
 		{ name: 'item', href: '/admin/item' }
 	];

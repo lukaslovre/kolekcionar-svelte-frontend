@@ -5,9 +5,17 @@
 	};
 
 	let { title, text }: CategoryDescriptionProps = $props();
+
+	function splitParagraphs(text: string) {
+		return text.split('\n');
+	}
 </script>
 
 <div class="mb-10 rounded-lg border border-neutral-300 bg-white p-4">
 	<p class="mb-3 text-sm font-semibold text-sky-800">{title}</p>
-	<p class="text-sm font-normal leading-relaxed">{text}</p>
+	<div class="flex flex-col gap-2">
+		{#each splitParagraphs(text) as paragraph}
+			<p class="text-sm font-normal leading-relaxed">{paragraph}</p>
+		{/each}
+	</div>
 </div>

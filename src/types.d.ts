@@ -24,10 +24,13 @@ type KategorijaTree = {
 };
 
 // Tags
-
 type Tag = {
 	id: string;
 	naziv: string;
+	group: string;
+	displayOnCard: boolean;
+	displayOnDetails: boolean;
+	description?: string;
 	items?: [];
 };
 

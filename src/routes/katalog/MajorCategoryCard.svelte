@@ -13,7 +13,7 @@
 	<img src={imgSrc} alt={label} class="absolute inset-0 h-full w-full rounded-lg object-cover" />
 
 	<div
-		class="absolute inset-0 flex items-end rounded-lg bg-gradient-to-b from-black/15 to-black/75
+		class="absolute inset-0 flex items-end rounded-lg bg-gradient-to-b from-black/15 to-black/80 to-90%
          transition-colors hover:from-black/10 hover:to-black/15
         "
 	>
