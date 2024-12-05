@@ -4,9 +4,9 @@
 
 	const navItems = [
 		{ name: 'Katalog', href: '/katalog' },
-		{ name: 'Tags', href: '/tags' },
 		{ name: 'O nama', href: '/about' },
-		{ name: 'item', href: '/admin/item' }
+		{ name: 'item', href: '/admin/item' },
+		{ name: 'Tags', href: '/admin/tags' }
 	];
 </script>
 

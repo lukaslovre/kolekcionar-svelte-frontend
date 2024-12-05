@@ -158,7 +158,6 @@
 				<form onsubmit={handleAddOption}>
 					<div class="flex flex-col gap-3 p-3">
 						<Input name="naziv" placeholder="Tag name" value={searchValue} />
-						<!-- <Input label="group" placeholder="Group" /> -->
 						<AutocompleteInput
 							name="group"
 							placeholder="Group"
