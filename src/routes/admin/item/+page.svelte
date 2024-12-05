@@ -49,6 +49,10 @@
 		},
 		{ id: 'kategorijaId', label: 'Kategorija ID', type: 'text', parse: String },
 		{ id: 'opis', label: 'Opis', type: 'textarea', parse: String, options: { rows: 4 } },
+		{ id: 'groupId', label: 'Group ID', type: 'text', parse: String },
+		{ id: 'vrijemeDodavanja', label: 'Vrijeme dodavanja', type: 'text', parse: String },
+		{ id: 'tip', label: 'Tip', type: 'text', parse: String, options: { defaultValue: 'ostalo' } },
+		{ id: 'countryId', label: 'Country ID', type: 'text', parse: String },
 		{ id: 'tags', label: 'Tags', type: 'tagsCombobox', parse: String },
 		{
 			id: 'images',
@@ -57,18 +61,10 @@
 			parse: imageUrlsParseFunction
 		},
 		{ id: 'nominala', label: 'Nominala', type: 'number', parse: Number },
-		{ id: 'valuta', label: 'Valuta', type: 'text', parse: String },
 		{ id: 'godina', label: 'Godina', type: 'number', parse: Number },
-		{ id: 'kralj', label: 'Kralj', type: 'text', parse: String },
 		{ id: 'mintage', label: 'Mintage', type: 'number', parse: Number },
-		{ id: 'materijal', label: 'Materijal', type: 'text', parse: String },
 		{ id: 'promjer', label: 'Promjer', type: 'number', parse: Number },
 		{ id: 'masa', label: 'Masa', type: 'number', parse: Number },
-		{ id: 'kvaliteta', label: 'Kvaliteta', type: 'text', parse: String },
-		{ id: 'pick', label: 'Pick', type: 'text', parse: String },
-		{ id: 'serija', label: 'Serija', type: 'text', parse: String },
-		{ id: 'naselje', label: 'Naselje', type: 'text', parse: String },
-		{ id: 'vrstaKamena', label: 'Vrsta kamena', type: 'text', parse: String },
 		{ id: 'visina', label: 'Visina', type: 'number', parse: Number },
 		{ id: 'sirina', label: 'Širina', type: 'number', parse: Number },
 		{ id: 'duljina', label: 'Duljina', type: 'number', parse: Number }
@@ -102,8 +98,6 @@
 		tagsSelectedValues = values;
 	}
 </script>
-
-<h1>Items</h1>
 
 <form onsubmit={handleSubmit}>
 	{#each fields as field}

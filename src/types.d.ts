@@ -42,10 +42,7 @@ interface Item {
 	nazivId: string;
 	kategorijaId: string;
 	opis?: string;
-	tags: {
-		id: string;
-		naziv: string;
-	}[];
+	tags: Tag[];
 	images: {
 		id: string;
 		url: string;
