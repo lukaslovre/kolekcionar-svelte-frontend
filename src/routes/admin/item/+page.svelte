@@ -1,10 +1,17 @@
 <script lang="ts">
 	import kolekcionarApi from '$lib/kolekcionarApi';
+	import CountryCombobox from '$lib/wrappedComponents/CountryCombobox.svelte';
 	import ItemTypeAutocompleteInput from '$lib/wrappedComponents/ItemTypeAutocompleteInput.svelte';
 	import TagsCombobox from '$lib/wrappedComponents/TagsCombobox.svelte';
 
 	// Types
-	type FieldType = 'text' | 'number' | 'textarea' | 'tagsCombobox' | 'typeAutocompleteInput';
+	type FieldType =
+		| 'text'
+		| 'number'
+		| 'textarea'
+		| 'tagsCombobox'
+		| 'typeAutocompleteInput'
+		| 'countryCombobox';
 	type Parser = (value: FormDataEntryValue | null) => string | number | string[];
 
 	interface FieldConfig {
@@ -68,7 +75,7 @@
 
 		{ id: 'groupId', label: 'Group ID', type: 'text', parse: String },
 		{ id: 'vrijemeDodavanja', label: 'Vrijeme dodavanja', type: 'text', parse: String },
-		{ id: 'countryId', label: 'Country ID', type: 'text', parse: String },
+		{ id: 'countryId', label: 'Country ID', type: 'countryCombobox', parse: String },
 		{ id: 'nominala', label: 'Nominala', type: 'number', parse: Number },
 		{ id: 'godina', label: 'Godina', type: 'number', parse: Number },
 		{ id: 'mintage', label: 'Mintage', type: 'number', parse: Number },
@@ -118,6 +125,8 @@
 			<TagsCombobox onSelectedChange={handleTagsComboboxSelectedChange} />
 		{:else if field.type === 'typeAutocompleteInput'}
 			<ItemTypeAutocompleteInput />
+		{:else if field.type === 'countryCombobox'}
+			<CountryCombobox onSelectedChange={console.log} />
 		{:else}
 			<input
 				type="text"

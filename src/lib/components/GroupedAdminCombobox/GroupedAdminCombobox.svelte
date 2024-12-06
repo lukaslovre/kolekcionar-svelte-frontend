@@ -128,19 +128,26 @@
 
 <div class="relative">
 	<button
-		class="w-full rounded-md border bg-white px-4 py-3 text-sm font-medium {isOpen
-			? 'border-sky-700'
-			: 'border-neutral-400'} flex items-center justify-between transition-colors"
+		class="w-full rounded-md border bg-white px-3 py-2 text-sm {isOpen
+			? 'border-orange-300 ring ring-orange-100'
+			: 'border-neutral-300'} flex items-center justify-between transition-colors"
 		type="button"
+		role="combobox"
+		aria-haspopup="listbox"
+		aria-expanded={isOpen}
+		aria-controls="combobox-options"
+		aria-labelledby="combobox-label"
 		onclick={() => {
 			isOpen = !isOpen;
 		}}
 	>
-		{selectedValues.length > 0
-			? selectedValues
-					.map((value) => flatOptions.find((option) => option.value === value)?.label || '')
-					.join(', ')
-			: `Select ${label}`}
+		{#if selectedValues.length > 0}
+			{selectedValues
+				.map((value) => flatOptions.find((option) => option.value === value)?.label || '')
+				.join(', ')}
+		{:else}
+			{`Select ${label}`}
+		{/if}
 
 		<Chevron color="#404040" />
 	</button>
@@ -148,6 +155,8 @@
 	<!-- Dropdown options container -->
 	{#if isOpen}
 		<div
+			id="combobox-options"
+			role="listbox"
 			class="absolute top-full z-10 mt-2 flex w-full flex-col gap-1 rounded-md border border-neutral-400 bg-neutral-50 p-1 shadow-md"
 		>
 			{#if showForm}
@@ -189,9 +198,11 @@
 				<div class="flex items-center gap-2 px-3 py-2">
 					<Search color="#808080" />
 					<input
+						id="search-input"
 						type="text"
-						class="flex-1 rounded-sm bg-neutral-50 text-sm font-normal outline-none"
 						placeholder="Search"
+						autocomplete="off"
+						class="flex-1 rounded-sm bg-neutral-50 text-sm font-normal outline-none"
 						bind:value={searchValue}
 					/>
 
@@ -211,6 +222,8 @@
 					{#each options as { label, value, hoverInfo } (value)}
 						<button
 							type="button"
+							role="option"
+							aria-selected={selectedValues.includes(value)}
 							class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm font-normal hover:bg-neutral-100"
 							onclick={() => {
 								toggleValue(value);
