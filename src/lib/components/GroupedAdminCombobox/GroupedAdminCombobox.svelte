@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Checkmark from '$lib/icons/Checkmark.svelte';
+	import Chevron from '$lib/icons/Chevron.svelte';
 	import Search from '$lib/icons/Search.svelte';
 	import kolekcionarApi from '$lib/kolekcionarApi';
 	import { getHoverInfoFromTag } from '$lib/utils/tagUtils';
@@ -129,7 +130,7 @@
 	<button
 		class="w-full rounded-md border bg-white px-4 py-3 text-sm font-medium {isOpen
 			? 'border-sky-700'
-			: 'border-neutral-400'} transition-colors"
+			: 'border-neutral-400'} flex items-center justify-between transition-colors"
 		type="button"
 		onclick={() => {
 			isOpen = !isOpen;
@@ -140,6 +141,8 @@
 					.map((value) => flatOptions.find((option) => option.value === value)?.label || '')
 					.join(', ')
 			: `Select ${label}`}
+
+		<Chevron color="#404040" />
 	</button>
 
 	<!-- Dropdown options container -->

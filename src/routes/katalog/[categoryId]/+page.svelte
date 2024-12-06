@@ -55,7 +55,7 @@
 		{#if itemsLoading}
 			<p>Loading...</p>
 		{:else}
-			<section class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8">
+			<section class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-8 pb-4">
 				{#each items as item (item.id)}
 					<ItemCard {item} />
 				{/each}
