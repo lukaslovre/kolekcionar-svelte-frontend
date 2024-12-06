@@ -1,9 +1,10 @@
 <script lang="ts">
 	import kolekcionarApi from '$lib/kolekcionarApi';
+	import ItemTypeAutocompleteInput from '$lib/wrappedComponents/ItemTypeAutocompleteInput.svelte';
 	import TagsCombobox from '$lib/wrappedComponents/TagsCombobox.svelte';
 
 	// Types
-	type FieldType = 'text' | 'number' | 'textarea' | 'tagsCombobox';
+	type FieldType = 'text' | 'number' | 'textarea' | 'tagsCombobox' | 'typeAutocompleteInput';
 	type Parser = (value: FormDataEntryValue | null) => string | number | string[];
 
 	interface FieldConfig {
@@ -11,6 +12,7 @@
 		label: string;
 		type: FieldType;
 		parse: Parser;
+		disabled?: boolean;
 		options?: {
 			maxLength?: number;
 			defaultValue?: string | number;
@@ -31,15 +33,7 @@
 	};
 
 	const fields: FieldConfig[] = [
-		{ id: 'id', label: 'ID', type: 'number', parse: Number },
-		{ id: 'cijena', label: 'Cijena', type: 'number', parse: Number },
-		{
-			id: 'limit',
-			label: 'Limit',
-			type: 'number',
-			parse: Number,
-			options: { defaultValue: 1 }
-		},
+		{ id: 'id', label: 'ID', type: 'number', parse: Number, disabled: true },
 		{
 			id: 'nazivId',
 			label: 'Naziv ID',
@@ -48,26 +42,41 @@
 			options: { maxLength: 128 }
 		},
 		{ id: 'kategorijaId', label: 'Kategorija ID', type: 'text', parse: String },
-		{ id: 'opis', label: 'Opis', type: 'textarea', parse: String, options: { rows: 4 } },
-		{ id: 'groupId', label: 'Group ID', type: 'text', parse: String },
-		{ id: 'vrijemeDodavanja', label: 'Vrijeme dodavanja', type: 'text', parse: String },
-		{ id: 'tip', label: 'Tip', type: 'text', parse: String, options: { defaultValue: 'ostalo' } },
-		{ id: 'countryId', label: 'Country ID', type: 'text', parse: String },
+		{ id: 'cijena', label: 'Cijena', type: 'number', parse: Number },
+		{
+			id: 'limit',
+			label: 'Limit',
+			type: 'number',
+			parse: Number,
+			options: { defaultValue: 1 }
+		},
 		{ id: 'tags', label: 'Tags', type: 'tagsCombobox', parse: String },
+		{ id: 'opis', label: 'Opis', type: 'textarea', parse: String, options: { rows: 4 } },
 		{
 			id: 'images',
 			label: 'Images (svaki url u svoj red ili odvojen zarezom)',
 			type: 'textarea',
 			parse: imageUrlsParseFunction
 		},
+		{
+			id: 'tip',
+			label: 'Tip',
+			type: 'typeAutocompleteInput',
+			parse: String,
+			options: { defaultValue: 'ostalo' }
+		},
+
+		{ id: 'groupId', label: 'Group ID', type: 'text', parse: String },
+		{ id: 'vrijemeDodavanja', label: 'Vrijeme dodavanja', type: 'text', parse: String },
+		{ id: 'countryId', label: 'Country ID', type: 'text', parse: String },
 		{ id: 'nominala', label: 'Nominala', type: 'number', parse: Number },
 		{ id: 'godina', label: 'Godina', type: 'number', parse: Number },
 		{ id: 'mintage', label: 'Mintage', type: 'number', parse: Number },
-		{ id: 'promjer', label: 'Promjer', type: 'number', parse: Number },
-		{ id: 'masa', label: 'Masa', type: 'number', parse: Number },
-		{ id: 'visina', label: 'Visina', type: 'number', parse: Number },
-		{ id: 'sirina', label: 'Širina', type: 'number', parse: Number },
-		{ id: 'duljina', label: 'Duljina', type: 'number', parse: Number }
+		{ id: 'promjer', label: 'Promjer (mm)', type: 'number', parse: Number },
+		{ id: 'masa', label: 'Masa (g)', type: 'number', parse: Number },
+		{ id: 'visina', label: 'Visina (mm)', type: 'number', parse: Number },
+		{ id: 'sirina', label: 'Širina (mm)', type: 'number', parse: Number },
+		{ id: 'duljina', label: 'Duljina (mm)', type: 'number', parse: Number }
 	];
 
 	async function handleSubmit(event: Event) {
@@ -107,6 +116,8 @@
 			<textarea id={field.id} name={field.id} rows={field.options?.rows}></textarea>
 		{:else if field.type === 'tagsCombobox'}
 			<TagsCombobox onSelectedChange={handleTagsComboboxSelectedChange} />
+		{:else if field.type === 'typeAutocompleteInput'}
+			<ItemTypeAutocompleteInput />
 		{:else}
 			<input
 				type="text"
@@ -114,6 +125,7 @@
 				name={field.id}
 				maxlength={field.options?.maxLength}
 				value={field.options?.defaultValue}
+				disabled={field.disabled}
 			/>
 		{/if}
 	{/each}
@@ -131,6 +143,7 @@
 	label {
 		font-size: 0.875rem;
 		font-weight: 600;
+		margin-top: 0.5rem;
 	}
 
 	input,
@@ -138,7 +151,11 @@
 		padding: 0.5rem;
 		border-radius: 0.25rem;
 		border: 1px solid #ccc;
-		margin-bottom: 0.5rem;
+	}
+
+	input[disabled] {
+		cursor: not-allowed;
+		opacity: 0.5;
 	}
 
 	textarea {
@@ -147,6 +164,7 @@
 
 	button[type='submit'] {
 		padding: 0.5rem;
+		margin-top: 1rem;
 		border-radius: 0.25rem;
 		background-color: #007bff;
 		color: white;

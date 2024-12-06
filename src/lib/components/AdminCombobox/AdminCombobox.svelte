@@ -52,6 +52,9 @@
 			? 'border-sky-700'
 			: 'border-neutral-400'} transition-colors"
 		type="button"
+		aria-haspopup="listbox"
+		aria-expanded={isOpen}
+		aria-labelledby="combobox-label"
 		onclick={() => {
 			isOpen = !isOpen;
 		}}
