@@ -148,7 +148,7 @@
 	<!-- Dropdown options container -->
 	{#if isOpen}
 		<div
-			class="absolute top-full mt-2 flex w-full flex-col gap-1 rounded-md border border-neutral-400 bg-neutral-50 p-1 shadow-md"
+			class="absolute top-full z-10 mt-2 flex w-full flex-col gap-1 rounded-md border border-neutral-400 bg-neutral-50 p-1 shadow-md"
 		>
 			{#if showForm}
 				<!-- Close form button -->

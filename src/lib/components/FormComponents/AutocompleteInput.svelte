@@ -79,7 +79,7 @@
 		{placeholder}
 		{name}
 		bind:value
-		class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:border-orange-300 focus:outline-none focus:ring focus:ring-orange-100"
+		class="z-0 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:border-orange-300 focus:outline-none focus:ring focus:ring-orange-100"
 		oninput={() => {
 			isOpen = true;
 			focusedOptionIndex = -1;

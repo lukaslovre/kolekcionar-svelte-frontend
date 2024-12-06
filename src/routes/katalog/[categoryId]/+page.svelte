@@ -47,7 +47,7 @@
 		{/if}
 	</nav>
 
-	<section class="flex-1 overflow-y-auto">
+	<section class="flex-1">
 		{#if data.categoryTree?.selectedCategory?.opis}
 			<CategoryDescription title="Povijest" text={data.categoryTree.selectedCategory.opis} />
 		{/if}
