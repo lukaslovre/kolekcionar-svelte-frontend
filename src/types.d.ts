@@ -72,3 +72,10 @@ interface ApiResponse<T> {
 	message: string;
 	data: T;
 }
+
+// Country
+interface Country {
+	id: string;
+	name: string;
+	code: string;
+}

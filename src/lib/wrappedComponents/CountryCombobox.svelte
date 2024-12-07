@@ -1,5 +1,6 @@
 <script lang="ts">
 	import AdminCombobox from '$lib/components/AdminCombobox/AdminCombobox.svelte';
+	import kolekcionarApi from '$lib/kolekcionarApi';
 
 	let {
 		onSelectedChange
@@ -7,28 +8,23 @@
 		onSelectedChange: (comboboxValues: string[]) => void;
 	} = $props();
 
-	const options = [
-		{
-			label: 'Croatia',
-			value: 'hr'
-		},
-		{
-			label: 'Serbia',
-			value: 'rs'
-		},
-		{
-			label: 'Bosnia and Herzegovina',
-			value: 'ba'
-		},
-		{
-			label: 'Montenegro',
-			value: 'me'
-		},
-		{
-			label: 'Slovenia',
-			value: 'si'
-		}
-	];
+	let countryOptions: Country[] = $state([]);
+
+	$inspect(countryOptions);
+
+	let comboboxOptions: { label: string; value: string }[] = $derived(
+		countryOptions.map((country) => ({
+			label: country.name,
+			value: country.id
+		}))
+	);
+
+	// On mount, fetch tags list
+	$effect(() => {
+		kolekcionarApi.getCountriesList().then((countries) => {
+			countryOptions = countries.data;
+		});
+	});
 
 	async function onAddOption(optionLabel: string) {
 		throw new Error('Not implemented');
@@ -42,7 +38,7 @@
 
 <AdminCombobox
 	label="Country"
-	{options}
+	options={comboboxOptions}
 	selectedValues={[]}
 	allowMultiple={false}
 	{onSelectedChange}

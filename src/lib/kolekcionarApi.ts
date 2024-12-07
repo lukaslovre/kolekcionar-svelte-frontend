@@ -66,6 +66,12 @@ class kolekcionarApi {
 
 		return response.json();
 	}
+
+	// Country
+	static async getCountriesList(): Promise<ApiResponse<Country[]>> {
+		const response = await fetch(`${this.baseUrl}/country`);
+		return response.json();
+	}
 }
 
 export default kolekcionarApi;
