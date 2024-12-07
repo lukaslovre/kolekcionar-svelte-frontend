@@ -157,7 +157,7 @@
 		<div
 			id="combobox-options"
 			role="listbox"
-			class="absolute top-full z-10 mt-2 flex w-full flex-col gap-1 rounded-md border border-neutral-400 bg-neutral-50 p-1 shadow-md"
+			class="absolute top-full z-10 mt-2 flex max-h-96 w-full flex-col gap-1 overflow-y-auto rounded-md border border-neutral-400 bg-neutral-50 p-1 shadow-md"
 		>
 			{#if showForm}
 				<!-- Close form button -->

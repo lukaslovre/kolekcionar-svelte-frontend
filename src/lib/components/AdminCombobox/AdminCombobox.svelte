@@ -29,6 +29,7 @@
 	let isOpen: boolean = $state(false);
 	let searchValue: string = $state('');
 	// let showForm: boolean = $state(false);
+	let containerRef: HTMLDivElement | undefined = $state();
 	let errorMessage: string = $state('');
 	let focusedOptionIndex: number = $state(-1);
 
@@ -37,6 +38,22 @@
 			label.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
 		)
 	);
+
+	$effect(() => {
+		if (containerRef) {
+			const handleClickOutside = (event: MouseEvent) => {
+				if (!containerRef!.contains(event.target as Node)) {
+					isOpen = false;
+				}
+			};
+
+			document.addEventListener('click', handleClickOutside);
+
+			return () => {
+				document.removeEventListener('click', handleClickOutside);
+			};
+		}
+	});
 
 	function toggleValue(value: string) {
 		let newSelectedValues: string[];
@@ -96,7 +113,7 @@
 	}
 </script>
 
-<div class="relative">
+<div class="relative" bind:this={containerRef}>
 	<button
 		class="w-full rounded-md border bg-white px-3 py-2 text-sm {isOpen
 			? 'border-orange-300 ring ring-orange-100'
@@ -129,7 +146,7 @@
 		<div
 			id="combobox-options"
 			role="listbox"
-			class="absolute top-full mt-2 flex w-full flex-col gap-1 rounded-md border border-neutral-400 bg-white p-1 shadow-md"
+			class="absolute top-full z-10 mt-2 flex max-h-72 w-full flex-col gap-1 overflow-y-auto rounded-md border border-neutral-400 bg-white p-1 shadow-md"
 		>
 			<!-- Search -->
 			<div class="flex items-center gap-2 px-3 py-2">
