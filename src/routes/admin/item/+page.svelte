@@ -99,6 +99,7 @@
 		);
 
 		parsedData.tags = tagsSelectedValues.length > 0 ? tagsSelectedValues : undefined;
+		parsedData.countryId = countrySelectedValue;
 
 		console.log(parsedData);
 
@@ -113,6 +114,12 @@
 		console.log(values);
 		tagsSelectedValues = values;
 	}
+
+	let countrySelectedValue: string = $state('');
+
+	function handleCountryComboboxSelectedChange(values: string[]) {
+		countrySelectedValue = values[0];
+	}
 </script>
 
 <form onsubmit={handleSubmit}>
@@ -126,7 +133,7 @@
 		{:else if field.type === 'typeAutocompleteInput'}
 			<ItemTypeAutocompleteInput />
 		{:else if field.type === 'countryCombobox'}
-			<CountryCombobox onSelectedChange={console.log} />
+			<CountryCombobox onSelectedChange={handleCountryComboboxSelectedChange} />
 		{:else}
 			<input
 				type="text"
