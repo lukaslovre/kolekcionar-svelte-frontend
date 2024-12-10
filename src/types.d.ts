@@ -79,3 +79,29 @@ interface Country {
 	name: string;
 	code: string;
 }
+
+// FORM
+type FieldType =
+	| 'text'
+	| 'number'
+	| 'textarea'
+	| 'tagsCombobox'
+	| 'typeAutocompleteInput'
+	| 'countryCombobox';
+type Parser = (value: FormDataEntryValue | null) => string | number | string[];
+
+interface FieldConfig {
+	id: string;
+	label: string;
+	type: FieldType;
+	value: string;
+	parse: Parser;
+	required?: boolean;
+	disabled?: boolean;
+	options?: {
+		maxLength?: number;
+		defaultValue?: string | number;
+		rows?: number;
+	};
+	error: string;
+}

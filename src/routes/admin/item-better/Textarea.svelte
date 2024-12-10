@@ -13,16 +13,15 @@
 </script>
 
 <div>
-	<input
-		type="text"
+	<textarea
 		{id}
 		{required}
 		{disabled}
-		{...options}
 		{value}
+		{...options}
 		placeholder={label}
 		class="w-full rounded border border-neutral-200 bg-white p-3 text-sm focus:border-orange-300 focus:outline-none focus:ring focus:ring-orange-300/25"
-	/>
+	></textarea>
 	{#if error}
 		<p>{error}</p>
 	{/if}
