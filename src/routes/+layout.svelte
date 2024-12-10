@@ -6,6 +6,7 @@
 		{ name: 'Katalog', href: '/katalog' },
 		{ name: 'O nama', href: '/about' },
 		{ name: 'item', href: '/admin/item' },
+		{ name: 'Item pro', href: '/admin/item-better' },
 		{ name: 'Tags', href: '/admin/tags' }
 	];
 </script>
