@@ -28,15 +28,13 @@
 			bind:tagsData={itemForm.tagsData}
 			bind:additionalData={itemForm.additionalData}
 			onButtonClick={(value) => {
-				const clickedItemForm = itemForms[i];
-
-				const nextItemFormValue = itemForms[i + 1].baseData.find(
-					(field) => field.id === 'kategorijaId'
-				)?.value;
-
-				itemForms[i].baseData.find((field) => field.id === 'kategorijaId')!.value =
-					nextItemFormValue;
-				console.log(nextItemFormValue);
+				// const clickedItemForm = itemForms[i];
+				// const nextItemFormValue = itemForms[i + 1].baseData.find(
+				// 	(field) => field.id === 'kategorijaId'
+				// )?.value;
+				// itemForms[i].baseData.find((field) => field.id === 'kategorijaId')!.value =
+				// 	nextItemFormValue;
+				// console.log(nextItemFormValue);
 			}}
 			getPreviousItemValue={(id) => {
 				if (i === 0) {
@@ -52,10 +50,6 @@
 
 				// Find the previous item form value
 				const previousItemFormValue = previousItemFormData.find((field) => field.id === id)?.value;
-
-				// const previousItemFormValue = itemForms[i - 1].baseData.find(
-				// 	(field) => field.id === id
-				// )?.value;
 
 				return previousItemFormValue;
 			}}

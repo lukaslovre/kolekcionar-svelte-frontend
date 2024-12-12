@@ -5,6 +5,7 @@
 	import TagsCombobox from '$lib/wrappedComponents/TagsCombobox.svelte';
 	import GenerateFieldsButton from './GenerateFieldsButton.svelte';
 	import Input from './Input.svelte';
+	import ItemColumnImage from './ItemColumnImage.svelte';
 	import type { ItemCreationColumnProps } from './ItemFastFormConfig';
 	import Textarea from './Textarea.svelte';
 
@@ -26,13 +27,7 @@
 </script>
 
 <div class="w-80 flex-shrink-0">
-	<div class="mb-4 h-48 w-full">
-		<img
-			src={URL.createObjectURL(images.at(0)!)}
-			alt="Item"
-			class="h-full w-full rounded-b-md rounded-t-xl object-cover"
-		/>
-	</div>
+	<ItemColumnImage {images} />
 
 	<div class="flex flex-col gap-6">
 		<div class="flex flex-col gap-3">
