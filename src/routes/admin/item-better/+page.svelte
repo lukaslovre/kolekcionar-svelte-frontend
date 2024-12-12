@@ -6,8 +6,8 @@
 	let images: File[] = $state([]);
 
 	function handleSubmitImages(newImages: File[]): void {
-		waitingForImageUpload = !waitingForImageUpload;
 		images = newImages;
+		waitingForImageUpload = !waitingForImageUpload;
 	}
 </script>
 

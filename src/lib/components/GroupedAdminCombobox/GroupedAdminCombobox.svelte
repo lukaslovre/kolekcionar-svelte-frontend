@@ -229,7 +229,7 @@
 								toggleValue(value);
 							}}
 							onmouseenter={() => {
-								console.log(JSON.parse(hoverInfo));
+								// console.log(JSON.parse(hoverInfo));
 							}}
 						>
 							<Checkmark color={selectedValues.includes(value) ? '#000' : 'transparent'} />

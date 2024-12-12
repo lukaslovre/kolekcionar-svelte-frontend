@@ -146,7 +146,7 @@
 		<div
 			id="combobox-options"
 			role="listbox"
-			class="absolute top-full z-10 mt-2 flex max-h-72 w-full flex-col gap-1 overflow-y-auto rounded-md border border-neutral-400 bg-white p-1 shadow-md"
+			class="absolute top-full z-10 mt-2 flex max-h-96 w-full flex-col gap-1 overflow-y-auto rounded-md border border-neutral-400 bg-white p-1 shadow-md"
 		>
 			<!-- Search -->
 			<div class="flex items-center gap-2 px-3 py-2">

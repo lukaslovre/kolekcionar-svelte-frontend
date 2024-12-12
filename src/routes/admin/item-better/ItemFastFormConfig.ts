@@ -1,7 +1,20 @@
 export type ItemCreationColumnProps = {
 	images: File[];
 	baseData: FieldConfig[];
+	tagsData: FieldConfig;
 	additionalData: FieldConfig[];
+};
+
+// Validators
+
+const numberValidator: Validator = (value: any) => {
+	if (isNaN(value)) {
+		return 'Cijena mora biti broj';
+	}
+	if (value < 0) {
+		return 'Cijena ne može biti negativna';
+	}
+	return null;
 };
 
 export function createItemCreationColumnData(image: File): ItemCreationColumnProps {
@@ -13,8 +26,7 @@ export function createItemCreationColumnData(image: File): ItemCreationColumnPro
 				label: 'Kategorija ID',
 				value: '',
 				type: 'text',
-				parse: String,
-				error: ''
+				parse: String
 			},
 			{
 				id: 'nazivId',
@@ -22,29 +34,35 @@ export function createItemCreationColumnData(image: File): ItemCreationColumnPro
 				value: '',
 				type: 'text',
 				parse: String,
-				options: { maxLength: 128 },
-				error: ''
+				options: { maxLength: 128 }
 			},
-			{ id: 'cijena', label: 'Cijena', value: '', type: 'number', parse: Number, error: '' },
+			{
+				id: 'cijena',
+				label: 'Cijena',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			},
 			{
 				id: 'opis',
 				label: 'Opis',
 				value: '',
 				type: 'textarea',
 				parse: String,
-				options: { rows: 4 },
-				error: ''
+				options: { rows: 4 }
 			}
 		],
+		tagsData: { id: 'tags', label: 'Tags', value: '', type: 'tagsCombobox', parse: String },
 		additionalData: [
 			{
 				id: 'limit',
 				label: 'Limit',
-				value: '',
+				value: 1,
 				type: 'number',
 				parse: Number,
-				options: { defaultValue: 1 },
-				error: ''
+				validators: [numberValidator]
+				// options: { defaultValue: 1 }
 			},
 			{
 				id: 'tip',
@@ -52,34 +70,87 @@ export function createItemCreationColumnData(image: File): ItemCreationColumnPro
 				value: '',
 				type: 'typeAutocompleteInput',
 				parse: String,
-				options: { defaultValue: 'ostalo' },
-				error: ''
+				options: { defaultValue: 'ostalo' }
 			},
-			{ id: 'groupId', label: 'Group ID', value: '', type: 'text', parse: String, error: '' },
+			{ id: 'groupId', label: 'Group ID', value: '', type: 'text', parse: String },
 			{
 				id: 'vrijemeDodavanja',
 				label: 'Vrijeme dodavanja',
 				value: '',
 				type: 'text',
-				parse: String,
-				error: ''
+				parse: String
 			},
 			{
 				id: 'countryId',
 				label: 'Country ID',
 				value: '',
 				type: 'countryCombobox',
-				parse: String,
-				error: ''
+				parse: String
 			},
-			{ id: 'nominala', label: 'Nominala', value: '', type: 'number', parse: Number, error: '' },
-			{ id: 'godina', label: 'Godina', value: '', type: 'number', parse: Number, error: '' },
-			{ id: 'mintage', label: 'Mintage', value: '', type: 'number', parse: Number, error: '' },
-			{ id: 'promjer', label: 'Promjer (mm)', value: '', type: 'number', parse: Number, error: '' },
-			{ id: 'masa', label: 'Masa (g)', value: '', type: 'number', parse: Number, error: '' },
-			{ id: 'visina', label: 'Visina (mm)', value: '', type: 'number', parse: Number, error: '' },
-			{ id: 'sirina', label: 'Širina (mm)', value: '', type: 'number', parse: Number, error: '' },
-			{ id: 'duljina', label: 'Duljina (mm)', value: '', type: 'number', parse: Number, error: '' }
+			{
+				id: 'nominala',
+				label: 'Nominala',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			},
+			{
+				id: 'godina',
+				label: 'Godina',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			},
+			{
+				id: 'mintage',
+				label: 'Mintage',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			},
+			{
+				id: 'promjer',
+				label: 'Promjer (mm)',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			},
+			{
+				id: 'masa',
+				label: 'Masa (g)',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			},
+			{
+				id: 'visina',
+				label: 'Visina (mm)',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			},
+			{
+				id: 'sirina',
+				label: 'Širina (mm)',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			},
+			{
+				id: 'duljina',
+				label: 'Duljina (mm)',
+				value: '',
+				type: 'number',
+				parse: Number,
+				validators: [numberValidator]
+			}
 		]
 	};
 }

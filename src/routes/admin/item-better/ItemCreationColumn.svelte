@@ -1,29 +1,54 @@
 <script lang="ts">
+	import Chevron from '$lib/icons/Chevron.svelte';
+	import CountryCombobox from '$lib/wrappedComponents/CountryCombobox.svelte';
+	import ItemTypeAutocompleteInput from '$lib/wrappedComponents/ItemTypeAutocompleteInput.svelte';
+	import TagsCombobox from '$lib/wrappedComponents/TagsCombobox.svelte';
+	import GenerateFieldsButton from './GenerateFieldsButton.svelte';
 	import Input from './Input.svelte';
 	import type { ItemCreationColumnProps } from './ItemFastFormConfig';
 	import Textarea from './Textarea.svelte';
 
-	let { images, baseData, additionalData }: ItemCreationColumnProps = $props();
+	type ComponentProps = ItemCreationColumnProps & {
+		onButtonClick: (value: string) => void;
+		getPreviousItemValue: (id: string) => any;
+	};
+
+	let {
+		images,
+		baseData = $bindable(),
+		tagsData = $bindable(),
+		additionalData = $bindable(),
+		onButtonClick,
+		getPreviousItemValue
+	}: ComponentProps = $props();
 
 	let additionalDataVisible: boolean = $state(false);
 </script>
 
-<div class="w-64 flex-shrink-0">
+<div class="w-80 flex-shrink-0">
 	<div class="mb-4 h-48 w-full">
 		<img
-			src={URL.createObjectURL(images.at(0))}
+			src={URL.createObjectURL(images.at(0)!)}
 			alt="Item"
 			class="h-full w-full rounded-b-md rounded-t-xl object-cover"
 		/>
 	</div>
 
-	<div class="flex flex-col gap-4">
+	<div class="flex flex-col gap-6">
 		<div class="flex flex-col gap-3">
-			{#each baseData as field, i}
+			{#each baseData as field}
 				{#if field.type === 'text' || field.type === 'number'}
-					<Input {...field} />
+					<Input
+						{...field}
+						onInput={(value: string) => (field.value = value)}
+						{getPreviousItemValue}
+					/>
 				{:else if field.type === 'textarea'}
-					<Textarea {...field} />
+					<Textarea
+						{...field}
+						onInput={(value: string) => (field.value = value)}
+						{getPreviousItemValue}
+					/>
 				{:else}
 					<p>
 						{field.type} is not supported yet.
@@ -32,19 +57,45 @@
 			{/each}
 		</div>
 
+		<div class="flex flex-col gap-3">
+			<GenerateFieldsButton onClick={() => onButtonClick('')} />
+			<TagsCombobox
+				onSelectedChange={(comboboxValues: string[]) => {
+					tagsData.value = comboboxValues;
+				}}
+			/>
+		</div>
+
 		<button
 			type="button"
-			class=" text-left text-sm font-semibold text-neutral-900"
-			onclick={() => (additionalDataVisible = !additionalDataVisible)}>Pokaži dodatna polja</button
+			class="flex items-center gap-1"
+			onclick={() => (additionalDataVisible = !additionalDataVisible)}
 		>
+			<Chevron size={24} color={'#1a1a1a'} rotate={additionalDataVisible ? 0 : -90} />
+			<span class="text-left text-sm font-semibold text-neutral-900"> Pokaži dodatna polja </span>
+		</button>
 
 		{#if additionalDataVisible}
 			<div class="flex flex-col gap-3">
 				{#each additionalData as field, i}
 					{#if field.type === 'text' || field.type === 'number'}
-						<Input {...field} />
+						<Input
+							{...field}
+							onInput={(value: any) => (field.value = value)}
+							{getPreviousItemValue}
+						/>
 					{:else if field.type === 'textarea'}
-						<Textarea {...field} />
+						<Textarea
+							{...field}
+							onInput={(value: any) => (field.value = value)}
+							{getPreviousItemValue}
+						/>
+					{:else if field.type === 'typeAutocompleteInput'}
+						<ItemTypeAutocompleteInput onInput={(value: string) => (field.value = value)} />
+					{:else if field.type === 'countryCombobox'}
+						<CountryCombobox
+							onSelectedChange={(comboboxValues: string[]) => (field.value = comboboxValues[0])}
+						/>
 					{:else}
 						<p>
 							{field.type} is not supported yet.

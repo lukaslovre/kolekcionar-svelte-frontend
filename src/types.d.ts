@@ -88,20 +88,27 @@ type FieldType =
 	| 'tagsCombobox'
 	| 'typeAutocompleteInput'
 	| 'countryCombobox';
-type Parser = (value: FormDataEntryValue | null) => string | number | string[];
+
+type Parser = (value: FormDataEntryValue | null) => any;
+
+type Validator = (value: any) => string | null; // string is error message, null is no error
+
+interface FieldOptions {
+	maxLength?: number;
+	defaultValue?: any;
+	rows?: number;
+}
 
 interface FieldConfig {
 	id: string;
 	label: string;
 	type: FieldType;
-	value: string;
+	value: any;
 	parse: Parser;
 	required?: boolean;
 	disabled?: boolean;
-	options?: {
-		maxLength?: number;
-		defaultValue?: string | number;
-		rows?: number;
-	};
-	error: string;
+	validators?: Validator[];
+	touched?: boolean;
+	error?: string;
+	options?: FieldOptions;
 }

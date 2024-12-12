@@ -5,6 +5,7 @@
 		value?: string;
 		placeholder?: string;
 		showOptionsIfValueEmpty?: boolean;
+		onInput?: (value: string) => void;
 	};
 
 	let {
@@ -12,7 +13,8 @@
 		value = '',
 		placeholder = '',
 		autocompleteOptions,
-		showOptionsIfValueEmpty = true
+		showOptionsIfValueEmpty = true,
+		onInput
 	}: InputProps = $props();
 
 	let isOpen: boolean = $state(false);
@@ -32,6 +34,12 @@
 			return () => {
 				document.removeEventListener('click', handleClickOutside);
 			};
+		}
+	});
+
+	$effect(() => {
+		if (onInput) {
+			onInput(value);
 		}
 	});
 
