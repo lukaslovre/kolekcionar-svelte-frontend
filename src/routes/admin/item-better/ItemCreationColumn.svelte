@@ -12,6 +12,7 @@
 	type ComponentProps = ItemCreationColumnProps & {
 		onButtonClick: (value: string) => void;
 		getPreviousItemValue: (id: string) => any;
+		joinImageToDirection: (direction: 'left' | 'right') => void;
 	};
 
 	let {
@@ -19,15 +20,17 @@
 		baseData = $bindable(),
 		tagsData = $bindable(),
 		additionalData = $bindable(),
+
 		onButtonClick,
-		getPreviousItemValue
+		getPreviousItemValue,
+		joinImageToDirection
 	}: ComponentProps = $props();
 
 	let additionalDataVisible: boolean = $state(false);
 </script>
 
 <div class="w-80 flex-shrink-0">
-	<ItemColumnImage {images} />
+	<ItemColumnImage {images} {joinImageToDirection} />
 
 	<div class="flex flex-col gap-6">
 		<div class="flex flex-col gap-3">

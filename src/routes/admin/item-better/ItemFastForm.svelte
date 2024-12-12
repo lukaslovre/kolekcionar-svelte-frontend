@@ -18,10 +18,27 @@
 	);
 
 	$inspect(itemForms);
+
+	// Image joining logic
+	function joinImageToDirection(direction: 'left' | 'right', fromIndex: number) {
+		const toIndex = direction === 'left' ? fromIndex - 1 : fromIndex + 1;
+
+		if (toIndex < 0 || toIndex >= itemForms.length) {
+			return;
+		}
+
+		const fromIndexImages = itemForms[fromIndex].images;
+		const toIndexImages = itemForms[toIndex].images;
+
+		itemForms[toIndex].images = [...toIndexImages, ...fromIndexImages];
+
+		// remove the form from the list
+		itemForms.splice(fromIndex, 1);
+	}
 </script>
 
 <div class="flex w-full gap-16 overflow-x-auto p-4">
-	{#each itemForms as itemForm, i}
+	{#each itemForms as itemForm, i (itemForm.images[0])}
 		<ItemCreationColumn
 			images={itemForm.images}
 			bind:baseData={itemForm.baseData}
@@ -53,6 +70,7 @@
 
 				return previousItemFormValue;
 			}}
+			joinImageToDirection={(direction) => joinImageToDirection(direction, i)}
 		/>
 	{/each}
 </div>
