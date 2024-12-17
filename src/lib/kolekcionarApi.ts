@@ -5,6 +5,7 @@ type ApiResponse<T> = {
 
 class kolekcionarApi {
 	private static baseUrl = 'http://localhost:3000';
+	static imagesUrl = `${this.baseUrl}/images`;
 
 	// Kategorije
 
@@ -70,6 +71,20 @@ class kolekcionarApi {
 	// Country
 	static async getCountriesList(): Promise<ApiResponse<Country[]>> {
 		const response = await fetch(`${this.baseUrl}/country`);
+		return response.json();
+	}
+
+	// Image
+	static async uploadImage(image: File): Promise<ApiResponse<ImageResponse>> {
+		const formData = new FormData();
+
+		formData.append('image', image); // 'image' matches multer.single('image') on the server
+
+		const response = await fetch(`${this.baseUrl}/image/upload`, {
+			method: 'POST',
+			body: formData
+		});
+
 		return response.json();
 	}
 }

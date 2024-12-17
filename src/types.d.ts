@@ -80,6 +80,24 @@ interface Country {
 	code: string;
 }
 
+// Image
+
+interface ImageResponse {
+	filename: {
+		original: string;
+		new: string;
+		lowres: string;
+	};
+	filesize: {
+		original: number; // in bytes
+		lowres: number; // in bytes
+	};
+}
+
+//
+
+//
+
 // FORM
 type FieldType =
 	| 'text'

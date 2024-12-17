@@ -73,34 +73,32 @@
 			<span class="text-left text-sm font-semibold text-neutral-900"> Pokaži dodatna polja </span>
 		</button>
 
-		{#if additionalDataVisible}
-			<div class="flex flex-col gap-3">
-				{#each additionalData as field, i}
-					{#if field.type === 'text' || field.type === 'number'}
-						<Input
-							{...field}
-							onInput={(value: any) => (field.value = value)}
-							{getPreviousItemValue}
-						/>
-					{:else if field.type === 'textarea'}
-						<Textarea
-							{...field}
-							onInput={(value: any) => (field.value = value)}
-							{getPreviousItemValue}
-						/>
-					{:else if field.type === 'typeAutocompleteInput'}
-						<ItemTypeAutocompleteInput onInput={(value: string) => (field.value = value)} />
-					{:else if field.type === 'countryCombobox'}
-						<CountryCombobox
-							onSelectedChange={(comboboxValues: string[]) => (field.value = comboboxValues[0])}
-						/>
-					{:else}
-						<p>
-							{field.type} is not supported yet.
-						</p>
-					{/if}
-				{/each}
-			</div>
-		{/if}
+		<div class="flex-col gap-3 {additionalDataVisible ? 'flex' : 'hidden'}">
+			{#each additionalData as field, i}
+				{#if field.type === 'text' || field.type === 'number'}
+					<Input
+						{...field}
+						onInput={(value: any) => (field.value = value)}
+						{getPreviousItemValue}
+					/>
+				{:else if field.type === 'textarea'}
+					<Textarea
+						{...field}
+						onInput={(value: any) => (field.value = value)}
+						{getPreviousItemValue}
+					/>
+				{:else if field.type === 'typeAutocompleteInput'}
+					<ItemTypeAutocompleteInput onInput={(value: string) => (field.value = value)} />
+				{:else if field.type === 'countryCombobox'}
+					<CountryCombobox
+						onSelectedChange={(comboboxValues: string[]) => (field.value = comboboxValues[0])}
+					/>
+				{:else}
+					<p>
+						{field.type} is not supported yet.
+					</p>
+				{/if}
+			{/each}
+		</div>
 	</div>
 </div>

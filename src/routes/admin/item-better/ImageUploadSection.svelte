@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Chevron from '$lib/icons/Chevron.svelte';
+	import kolekcionarApi from '$lib/kolekcionarApi';
 	import { bytesToHumanReadable } from '$lib/utils/formattingUtils';
 
 	type ImageUploadSectionProps = {
@@ -7,8 +9,12 @@
 
 	let { onSubmitImages }: ImageUploadSectionProps = $props();
 
-	let images: File[] = $state([]);
-	// $inspect(images);
+	type ImageUploadState = {
+		data: ImageResponse;
+		uploading: 'pending' | 'uploading' | 'done';
+		error: string;
+	};
+	let imageUploadStates: ImageUploadState[] = $state([]);
 
 	// File dropzone
 	let dragActive: boolean = $state(false);
@@ -36,8 +42,42 @@
 		}
 	}
 
-	function handleFiles(files: FileList) {
-		images = Array.from(files);
+	async function handleFiles(files: FileList) {
+		const filesArray = Array.from(files);
+
+		imageUploadStates = filesArray.map((file) => ({
+			data: {
+				filename: {
+					original: file.name,
+					new: '',
+					lowres: ''
+				},
+				filesize: {
+					original: file.size,
+					lowres: 0
+				}
+			},
+			uploading: 'pending',
+			error: ''
+		}));
+
+		// Upload images one by one
+		for (let i = 0; i < filesArray.length; i++) {
+			try {
+				imageUploadStates[i].uploading = 'uploading';
+
+				const response = await kolekcionarApi.uploadImage(filesArray[i]);
+
+				imageUploadStates[i] = {
+					data: response.data,
+					uploading: 'done',
+					error: ''
+				};
+			} catch (error) {
+				console.error(error);
+				// TODO handle error (kolekcionarApi class should throw error if status is not 200)
+			}
+		}
 	}
 
 	// Image reordering
@@ -57,11 +97,11 @@
 		e.preventDefault();
 		if (draggedIndex === index) return;
 
-		const items = [...images];
+		const items = [...imageUploadStates];
 		const draggedItem = items[draggedIndex];
 		items.splice(draggedIndex, 1);
 		items.splice(index, 0, draggedItem);
-		images = items;
+		imageUploadStates = items;
 		draggedIndex = index;
 	}
 </script>
@@ -90,9 +130,9 @@
 	</label>
 </div>
 
-{#if images.length > 0}
+{#if imageUploadStates.length > 0}
 	<ul class="mt-8 flex flex-col gap-2">
-		{#each images as image, i (image.name)}
+		{#each imageUploadStates as { data, uploading, error }, i}
 			<li
 				class="flex items-center gap-6 border-y border-gray-200 p-2 {draggedIndex === i
 					? 'bg-orange-200'
@@ -102,25 +142,60 @@
 				ondragend={handleDragEnd}
 				ondragover={(e) => handleDragOver(e, i)}
 			>
-				<div class="h-4 w-4 rounded-full bg-neutral-500"></div>
+				<div class="flex flex-col">
+					<Chevron size={24} color={'#808080'} rotate={180} />
+					<Chevron size={24} color={'#808080'} rotate={0} />
+				</div>
 				<img
-					src={URL.createObjectURL(image)}
-					alt={image.name}
-					class="h-16 w-16 rounded-lg object-cover"
+					src={data.filename.lowres
+						? kolekcionarApi.imagesUrl + '/' + data.filename.lowres
+						: '/item-default-img.jpg'}
+					alt={data.filename.original}
+					class="h-16 w-16 overflow-hidden rounded-lg object-cover"
 				/>
-				<span>
-					{image.name} - {bytesToHumanReadable(image.size)}
-				</span>
+				<div class="flex flex-col items-start gap-2 self-start">
+					<p class="text-sm font-medium text-neutral-800">
+						{data.filename.original}
+					</p>
+
+					<div class="flex gap-2 text-xs font-medium text-neutral-700">
+						<p>
+							{bytesToHumanReadable(data.filesize.original)}
+						</p>
+						<span>•</span>
+						<p>
+							Lowres: {bytesToHumanReadable(data.filesize.lowres)}
+						</p>
+					</div>
+
+					{#if error}
+						<span class="rounded-md bg-red-200 px-2 py-1 text-xs font-semibold text-red-900">
+							{error}
+						</span>
+					{:else if uploading === 'pending'}
+						<span class="rounded-md bg-amber-200 px-2 py-1 text-xs font-semibold text-amber-900">
+							Waiting to upload...
+						</span>
+					{:else if uploading === 'uploading'}
+						<span class="rounded-md bg-indigo-200 px-2 py-1 text-xs font-semibold text-indigo-900">
+							Uploading...
+						</span>
+					{:else if uploading === 'done'}
+						<span class="rounded-md bg-green-200 px-2 py-1 text-xs font-semibold text-green-900">
+							Done!
+						</span>
+					{/if}
+				</div>
 			</li>
 		{/each}
 	</ul>
 {/if}
 
-{#if images.length > 0}
+{#if imageUploadStates.every((state) => state.uploading === 'done') && imageUploadStates.length > 0}
 	<button
-		class="mt-8 w-full rounded-lg bg-orange-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-orange-700"
+		class="mt-8 w-full rounded-lg bg-orange-700 px-4 py-2 font-semibold text-orange-50 transition-colors hover:bg-orange-800"
 		onclick={() => {
-			onSubmitImages(images);
+			// onSubmitImages(imageUploadStates);
 		}}
 	>
 		Upload
