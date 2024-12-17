@@ -1,33 +1,41 @@
 <script lang="ts">
 	import Chevron from '$lib/icons/Chevron.svelte';
 	import ImageIcon from '$lib/icons/ImageIcon.svelte';
+	import kolekcionarApi from '$lib/kolekcionarApi';
 
 	let {
 		images,
 		joinImageToDirection
-	}: { images: File[]; joinImageToDirection: (direction: 'left' | 'right') => void } = $props();
+	}: { images: ImageResponse[]; joinImageToDirection: (direction: 'left' | 'right') => void } =
+		$props();
 
 	let currentImageIndex: number = $state(0);
 
 	const topButtonHandlers = [
 		{
 			onclick: () => {
-				// currentImageIndex = Math.max(0, currentImageIndex - 1);
 				joinImageToDirection('left');
 			}
 		},
 		{
 			onclick: () => {
-				// currentImageIndex = Math.min(images.length - 1, currentImageIndex + 1);
 				joinImageToDirection('right');
 			}
 		}
 	];
+
+	function displayNextImage(direction: 'left' | 'right') {
+		if (direction === 'left') {
+			currentImageIndex = Math.max(0, currentImageIndex - 1);
+		} else {
+			currentImageIndex = Math.min(images.length - 1, currentImageIndex + 1);
+		}
+	}
 </script>
 
 <div class="relative mb-4 h-48 w-full">
 	<img
-		src={URL.createObjectURL(images.at(currentImageIndex)!)}
+		src={kolekcionarApi.imagesUrl + '/' + images[currentImageIndex].filename.lowres}
 		alt="Item"
 		class="h-full w-full rounded-b-md rounded-t-xl object-cover"
 	/>
@@ -50,7 +58,7 @@
 		<button
 			type="button"
 			class="flex h-10 w-10 items-center justify-center rounded bg-black/80 transition-colors hover:bg-black/90"
-			onclick={() => (currentImageIndex = Math.max(0, currentImageIndex - 1))}
+			onclick={() => displayNextImage('left')}
 		>
 			<Chevron size={24} color={'#fff'} rotate={90} />
 		</button>
@@ -67,7 +75,7 @@
 		<button
 			type="button"
 			class="flex h-10 w-10 items-center justify-center rounded bg-black/80 transition-colors hover:bg-black/90"
-			onclick={() => (currentImageIndex = Math.min(images.length - 1, currentImageIndex + 1))}
+			onclick={() => displayNextImage('right')}
 		>
 			<Chevron size={24} color={'#fff'} rotate={-90} />
 		</button>

@@ -1,5 +1,5 @@
 export type ItemCreationColumnProps = {
-	images: File[];
+	images: ImageResponse[];
 	baseData: FieldConfig[];
 	tagsData: FieldConfig;
 	additionalData: FieldConfig[];
@@ -17,7 +17,7 @@ const numberValidator: Validator = (value: any) => {
 	return null;
 };
 
-export function createItemCreationColumnData(image: File): ItemCreationColumnProps {
+export function createItemCreationColumnData(image: ImageResponse): ItemCreationColumnProps {
 	return {
 		images: [image],
 		baseData: [

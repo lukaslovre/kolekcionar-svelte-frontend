@@ -4,7 +4,7 @@
 	import type { ItemCreationColumnProps } from './ItemFastFormConfig';
 
 	type ItemFastFormProps = {
-		images: File[];
+		images: ImageResponse[];
 	};
 
 	let { images }: ItemFastFormProps = $props();

@@ -4,7 +4,7 @@
 	import { bytesToHumanReadable } from '$lib/utils/formattingUtils';
 
 	type ImageUploadSectionProps = {
-		onSubmitImages: (images: File[]) => void;
+		onSubmitImages: (images: ImageResponse[]) => void;
 	};
 
 	let { onSubmitImages }: ImageUploadSectionProps = $props();
@@ -195,7 +195,7 @@
 	<button
 		class="mt-8 w-full rounded-lg bg-orange-700 px-4 py-2 font-semibold text-orange-50 transition-colors hover:bg-orange-800"
 		onclick={() => {
-			// onSubmitImages(imageUploadStates);
+			onSubmitImages(imageUploadStates.map((state) => state.data));
 		}}
 	>
 		Upload

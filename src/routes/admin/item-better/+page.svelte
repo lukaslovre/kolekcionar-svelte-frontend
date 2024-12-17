@@ -3,9 +3,10 @@
 	import ItemFastForm from './ItemFastForm.svelte';
 
 	let waitingForImageUpload: boolean = $state(true);
-	let images: File[] = $state([]);
 
-	function handleSubmitImages(newImages: File[]): void {
+	let images: ImageResponse[] = $state([]);
+
+	function handleSubmitImages(newImages: ImageResponse[]): void {
 		images = newImages;
 		waitingForImageUpload = !waitingForImageUpload;
 	}
