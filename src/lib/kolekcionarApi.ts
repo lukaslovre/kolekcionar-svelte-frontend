@@ -1,8 +1,3 @@
-type ApiResponse<T> = {
-	message: string;
-	data: T;
-};
-
 class kolekcionarApi {
 	private static baseUrl = 'http://localhost:3000';
 	static imagesUrl = `${this.baseUrl}/images`;
@@ -56,7 +51,7 @@ class kolekcionarApi {
 		return response.json();
 	}
 
-	static async createItem(itemData: any) {
+	static async createItem(itemData: any): Promise<ApiResponse<any>> {
 		const response = await fetch(`${this.baseUrl}/item`, {
 			method: 'POST',
 			headers: {

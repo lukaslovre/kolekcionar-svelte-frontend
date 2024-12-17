@@ -68,10 +68,14 @@ interface Item {
 	duljina?: number;
 }
 
-interface ApiResponse<T> {
-	message: string;
-	data: T;
-}
+type ApiResponse<T> =
+	| {
+			message: string;
+			data: T;
+	  }
+	| {
+			error: string;
+	  };
 
 // Country
 interface Country {

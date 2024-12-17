@@ -1,4 +1,5 @@
 <script lang="ts">
+	import kolekcionarApi from '$lib/kolekcionarApi';
 	import ItemTag from './ItemTag.svelte';
 
 	type ItemCardProps = {
@@ -6,12 +7,25 @@
 	};
 
 	let { item }: ItemCardProps = $props();
+
+	const imageUrl = (() => {
+		const url = item.images.at(0)?.url;
+
+		if (url == undefined) {
+			return '/item-default-img.jpg';
+		} else if (url.startsWith('http')) {
+			return url;
+		} else {
+			return kolekcionarApi.imagesUrl + '/lowres-' + url;
+			// return kolekcionarApi.imagesUrl + '/' + url;
+		}
+	})();
 </script>
 
 <!-- border border-neutral-300 -->
 <div class="flex flex-col rounded-lg bg-white/75 shadow-md">
 	<img
-		src={item.images?.at(0)?.url || '/item-default-img.jpg'}
+		src={imageUrl || '/item-default-img.jpg'}
 		alt={item.nazivId}
 		class="h-64 w-full rounded-lg rounded-b-sm object-cover"
 	/>

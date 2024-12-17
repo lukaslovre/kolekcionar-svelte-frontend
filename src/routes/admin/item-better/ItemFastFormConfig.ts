@@ -53,7 +53,7 @@ export function createItemCreationColumnData(image: ImageResponse): ItemCreation
 				options: { rows: 4 }
 			}
 		],
-		tagsData: { id: 'tags', label: 'Tags', value: '', type: 'tagsCombobox', parse: String },
+		tagsData: { id: 'tags', label: 'Tags', value: [], type: 'tagsCombobox', parse: String },
 		additionalData: [
 			{
 				id: 'limit',
