@@ -1,5 +1,7 @@
 <script lang="ts">
 	import '../app.css';
+	import { page } from '$app/state';
+
 	let { children } = $props();
 
 	const navItems = [
@@ -7,7 +9,7 @@
 		{ name: 'O nama', href: '/about' },
 		{ name: 'item', href: '/admin/item' },
 		{ name: 'Item pro', href: '/admin/item-better' },
-		{ name: 'Tags', href: '/admin/tags' }
+		{ name: 'Kategorije', href: '/admin/kategorije' }
 	];
 </script>
 
