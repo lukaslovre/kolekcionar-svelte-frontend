@@ -19,6 +19,20 @@ class kolekcionarApi {
 		return response.json();
 	}
 
+	static async createKategorija(
+		kategorija: Omit<Kategorija, 'id'>
+	): Promise<ApiResponse<Kategorija>> {
+		const response = await fetch(`${this.baseUrl}/kategorije`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(kategorija)
+		});
+
+		return response.json();
+	}
+
 	// Tags
 
 	static async getTagsList(): Promise<ApiResponse<Tag[]>> {

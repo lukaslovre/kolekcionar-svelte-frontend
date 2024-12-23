@@ -7,13 +7,13 @@
 	const navItems = [
 		{ name: 'Katalog', href: '/katalog' },
 		{ name: 'O nama', href: '/about' },
-		{ name: 'item', href: '/admin/item' },
+		// { name: 'item', href: '/admin/item' },
 		{ name: 'Item pro', href: '/admin/item-better' },
 		{ name: 'Kategorije', href: '/admin/kategorije' }
 	];
 </script>
 
-<header class="flex justify-center border-b border-neutral-500 bg-orange-200 px-8 py-4 shadow-md">
+<header class="flex justify-center border-b border-black/25 bg-orange-200 px-8 py-4 shadow-md">
 	<div class="flex w-full max-w-screen-xl items-center justify-between">
 		<a class="flex items-center gap-4" href="/">
 			<img src="/kolekcionar-logo-96.png" alt="Logo" />
@@ -23,9 +23,16 @@
 			</div>
 		</a>
 
-		<nav class="flex gap-8">
+		<nav class="flex gap-2">
 			{#each navItems as { name, href }}
-				<a class="text-lg uppercase text-neutral-800 hover:text-red-700" {href}>{name}</a>
+				<a
+					class="rounded-lg px-6 py-3 text-lg uppercase transition-colors {page.route.id?.startsWith(
+						href
+					)
+						? 'bg-red-800 font-semibold text-white shadow'
+						: 'text-neutral-700 hover:text-red-900'}"
+					{href}>{name}</a
+				>
 			{/each}
 		</nav>
 	</div>

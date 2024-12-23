@@ -1,7 +1,7 @@
 <script lang="ts">
 	type InputProps = FieldConfig & {
 		onInput: (value: any) => void;
-		getPreviousItemValue: (id: string) => any;
+		getPreviousItemValue?: (id: string) => any;
 	};
 
 	let {
@@ -43,10 +43,12 @@
 	function handleKeyPress(e: KeyboardEvent) {
 		// If ctrl + enter is pressed
 		if (e.ctrlKey && e.key === 'Enter') {
-			const nextItemValue = getPreviousItemValue(id);
+			if (getPreviousItemValue) {
+				const nextItemValue = getPreviousItemValue(id);
 
-			if (nextItemValue) {
-				onInput(nextItemValue);
+				if (nextItemValue) {
+					onInput(nextItemValue);
+				}
 			}
 		}
 	}
