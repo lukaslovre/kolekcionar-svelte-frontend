@@ -12,12 +12,6 @@
 
 	let { data }: PageProps = $props();
 
-	async function fetchCategoryTreeFromId(id: string) {
-		// const { data } = await kolekcionarApi.getKategorijaById(id);
-		// console.log(data);
-		// categoryTree = data;
-	}
-
 	// Items
 
 	let items: Item[] = $state([]);
@@ -41,7 +35,7 @@
 <main class="flex gap-20">
 	<nav class="w-80 shrink-0">
 		{#if data.categoryTree}
-			<CategoryTree categoryTree={data.categoryTree} {fetchCategoryTreeFromId} />
+			<CategoryTree categoryTree={data.categoryTree} />
 		{:else}
 			<p>Loading...</p>
 		{/if}
