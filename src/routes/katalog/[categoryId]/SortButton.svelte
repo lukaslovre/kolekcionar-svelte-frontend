@@ -26,12 +26,13 @@ No error handling for invalid URLs -->
 		{ value: 'cijena', label: 'Cijena' },
 		{ value: 'nazivId', label: 'Naziv' },
 		{ value: 'godina', label: 'Godina' },
-		{ value: 'masa', label: 'Masa' }
+		{ value: 'masa', label: 'Masa' },
+		{ value: 'nominala', label: 'Nominala' }
 	];
 
 	let dropdownOpen: boolean = $state(false);
 	let selectedOptionIndex: number = $derived.by(() => {
-		const foundOption = sortOptions.find((option) => option.value === filterStore.filters.sortBy);
+		const foundOption = sortOptions.find((option) => option.value === filterStore.options.sortBy);
 		return foundOption ? sortOptions.indexOf(foundOption) : -1;
 	});
 </script>
@@ -61,10 +62,10 @@ No error handling for invalid URLs -->
 							}`}"
 							onclick={() => {
 								console.log(option.value);
-								if (filterStore.filters.sortBy === option.value) {
+								if (filterStore.options.sortBy === option.value) {
 									filterStore.toggleSortDirection();
 								} else {
-									filterStore.setFilter('sortBy', option.value);
+									filterStore.setOptions('sortBy', option.value);
 								}
 
 								dropdownOpen = false;
@@ -72,7 +73,7 @@ No error handling for invalid URLs -->
 						>
 							{option.label}
 							{#if selectedOptionIndex === i}
-								{filterStore.filters.sort === 'asc' ? '(asc)' : '(desc)'}
+								{filterStore.options.sort === 'asc' ? '(asc)' : '(desc)'}
 							{/if}
 						</button>
 					</li>

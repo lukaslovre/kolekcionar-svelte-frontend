@@ -5,6 +5,7 @@
 	import ItemCard from '$lib/components/ItemCard/ItemCard.svelte';
 
 	import type { PageData } from './$types';
+	import FilterButton from './FilterButton.svelte';
 	import { filterStore } from './filterStore.svelte';
 	import Pagination from './Pagination.svelte';
 	import SearchInput from './SearchInput.svelte';
@@ -43,6 +44,7 @@
 				<div class="filter-and-sort flex gap-4">
 					<SearchInput onInput={(value) => console.log(value)} />
 					<SortButton />
+					<FilterButton />
 				</div>
 
 				<!-- Active filters -->

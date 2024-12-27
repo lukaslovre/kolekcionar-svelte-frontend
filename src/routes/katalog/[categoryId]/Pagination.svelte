@@ -14,7 +14,7 @@
 
 	function handleMaxItemsPerPageChange(event: Event) {
 		const target = event.target as HTMLSelectElement;
-		filterStore.setFilter('max', target.value);
+		filterStore.setOptions('max', target.value);
 	}
 </script>
 
@@ -37,7 +37,7 @@
 	<select
 		class="rounded border border-black/15 bg-white p-4 text-sm font-semibold shadow"
 		onchange={handleMaxItemsPerPageChange}
-		value={filterStore.filters.max.toString()}
+		value={filterStore.options.max.toString()}
 	>
 		<option value="10">10</option>
 		<option value="20">20</option>
