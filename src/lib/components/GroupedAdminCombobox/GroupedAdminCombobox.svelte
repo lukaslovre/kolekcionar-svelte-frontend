@@ -8,6 +8,8 @@
 	import AutocompleteInput from '../FormComponents/AutocompleteInput.svelte';
 	import Input from './Input.svelte';
 
+	type CreateTag = Omit<Tag, 'id' | 'items'>;
+
 	type AdminComboboxProps = {
 		label: string;
 		options: {
@@ -21,7 +23,7 @@
 
 		selectedValues: string[];
 		onSelectedChange: (selectedValues: string[]) => void;
-		onAddOption?: (optionLabel: string) => Promise<AdminComboboxProps['options'][0]['options'][0]>;
+		onAddOption: (tag: CreateTag) => Promise<string>; // Returns the ID of the newly created tag
 	};
 	let { label, options, selectedValues, onSelectedChange, onAddOption }: AdminComboboxProps =
 		$props();
@@ -87,9 +89,7 @@
 
 		const formData = new FormData(e.target as HTMLFormElement);
 
-		type createTag = Omit<Tag, 'id' | 'items'>;
-
-		const newTag: createTag = {
+		const newTag: CreateTag = {
 			naziv: formData.get('naziv') as string,
 			group: formData.get('group') as string,
 			description: formData.get('description') as string,
@@ -105,37 +105,9 @@
 		}
 
 		try {
-			const response = await kolekcionarApi.createTag(newTag);
-			console.log(response);
+			const newTagId = await onAddOption(newTag);
+			selectedValues = [...selectedValues, newTagId];
 
-			// Nekakav check da li je uspesno kreiran tag
-			if (!response.data.id) {
-				alert('!response.data.id');
-				return;
-			}
-
-			const newOption = {
-				label: response.data.naziv,
-				value: response.data.id,
-				hoverInfo: getHoverInfoFromTag(response.data)
-			};
-
-			if (!options.find((group) => group.groupName === response.data.group)) {
-				options = [...options, { groupName: response.data.group, options: [newOption] }];
-			} else {
-				options = options.map((group) => {
-					if (group.groupName === response.data.group) {
-						return {
-							...group,
-							options: [...group.options, newOption]
-						};
-					} else {
-						return group;
-					}
-				});
-			}
-
-			selectedValues = [...selectedValues, response.data.id];
 			onSelectedChange(selectedValues);
 			searchValue = '';
 			toggleFormVisibility(e);

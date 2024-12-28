@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/state';
+	import { tagsComboboxStore } from '$lib/components/wrappedComponents/TagsCombobox/TagsComboboxStore.svelte';
 
 	let { children } = $props();
 
@@ -11,6 +12,9 @@
 		{ name: 'Item pro', href: '/admin/item-better' },
 		{ name: 'Kategorije', href: '/admin/kategorije' }
 	];
+
+	// Initialize stores for global state
+	void tagsComboboxStore.initializeStore();
 </script>
 
 <header class="flex justify-center border-b border-black/25 bg-orange-200 px-8 py-4 shadow-md">

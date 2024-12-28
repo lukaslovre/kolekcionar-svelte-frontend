@@ -40,7 +40,7 @@ class kolekcionarApi {
 		return response.json();
 	}
 
-	static async createTag(tag: Omit<Tag, 'id'>): Promise<ApiResponse<Tag>> {
+	static async createTag(tag: Omit<Tag, 'id' | 'items'>): Promise<ApiResponse<Tag>> {
 		const response = await fetch(`${this.baseUrl}/tag`, {
 			method: 'POST',
 			headers: {

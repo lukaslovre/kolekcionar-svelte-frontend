@@ -2,6 +2,7 @@
 	import GroupedAdminCombobox from '$lib/components/GroupedAdminCombobox/GroupedAdminCombobox.svelte';
 	import kolekcionarApi from '$lib/kolekcionarApi';
 	import { getHoverInfoFromTag } from '$lib/utils/tagUtils';
+	import { tagsComboboxStore } from './TagsComboboxStore.svelte';
 
 	type GroupedOption = {
 		groupName: string;
@@ -18,10 +19,10 @@
 		onSelectedChange: (comboboxValues: string[]) => void;
 	} = $props();
 
-	let tagOptions: Tag[] = $state([]);
+	// let tagOptions: Tag[] = $state([]);
 
 	let groupedTagOptions = $derived(
-		tagOptions.reduce(
+		tagsComboboxStore.tagOptions.reduce(
 			(acc, tag) => {
 				const group = tag.group;
 
@@ -52,12 +53,42 @@
 
 	$inspect(formattedTagOptions);
 
-	// On mount, fetch tags list
-	$effect(() => {
-		kolekcionarApi.getTagsList().then((response) => {
-			tagOptions = response.data;
-		});
-	});
+	type CreateTag = Omit<Tag, 'id' | 'items'>;
+	async function handleAddOption(newTag: CreateTag): Promise<string> {
+		const response = await kolekcionarApi.createTag(newTag);
+
+		console.log(response);
+
+		// Nekakav check da li je uspesno kreiran tag
+		if (!response.data.id || response.error) {
+			throw new Error('Tag creation failed.' + response.error);
+		}
+
+		tagsComboboxStore.addTag(response.data);
+
+		return response.data.id;
+
+		// const newOption = {
+		// 	label: response.data.naziv,
+		// 	value: response.data.id,
+		// 	hoverInfo: getHoverInfoFromTag(response.data)
+		// };
+
+		// if (!options.find((group) => group.groupName === response.data.group)) {
+		// 	options = [...options, { groupName: response.data.group, options: [newOption] }];
+		// } else {
+		// 	options = options.map((group) => {
+		// 		if (group.groupName === response.data.group) {
+		// 			return {
+		// 				...group,
+		// 				options: [...group.options, newOption]
+		// 			};
+		// 		} else {
+		// 			return group;
+		// 		}
+		// 	});
+		// }
+	}
 </script>
 
 <GroupedAdminCombobox
@@ -65,5 +96,5 @@
 	options={formattedTagOptions}
 	selectedValues={[]}
 	{onSelectedChange}
+	onAddOption={handleAddOption}
 />
-<!-- onAddOption={handleAddOption} -->
