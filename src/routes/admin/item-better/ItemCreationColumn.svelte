@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Chevron from '$lib/icons/Chevron.svelte';
-	import CountryCombobox from '$lib/wrappedComponents/CountryCombobox.svelte';
-	import ItemTypeAutocompleteInput from '$lib/wrappedComponents/ItemTypeAutocompleteInput.svelte';
-	import TagsCombobox from '$lib/wrappedComponents/TagsCombobox.svelte';
+	import CountryCombobox from '$lib/components/wrappedComponents/CountryCombobox.svelte';
+	import ItemTypeAutocompleteInput from '$lib/components/wrappedComponents/ItemTypeAutocompleteInput.svelte';
+	import TagsCombobox from '$lib/components/wrappedComponents/TagsCombobox.svelte';
 	import GenerateFieldsButton from './GenerateFieldsButton.svelte';
 	import Input from './Input.svelte';
 	import ItemColumnImage from './ItemColumnImage.svelte';
