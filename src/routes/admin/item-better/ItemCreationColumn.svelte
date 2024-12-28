@@ -2,7 +2,7 @@
 	import Chevron from '$lib/icons/Chevron.svelte';
 	import CountryCombobox from '$lib/components/wrappedComponents/CountryCombobox/CountryCombobox.svelte';
 	import ItemTypeAutocompleteInput from '$lib/components/wrappedComponents/ItemTypeAutocompleteInput.svelte';
-	import TagsCombobox from '$lib/components/wrappedComponents/TagsCombobox.svelte';
+	import TagsCombobox from '$lib/components/wrappedComponents/TagsCombobox/TagsCombobox.svelte';
 	import GenerateFieldsButton from './GenerateFieldsButton.svelte';
 	import Input from './Input.svelte';
 	import ItemColumnImage from './ItemColumnImage.svelte';
