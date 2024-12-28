@@ -24,14 +24,15 @@ export const load: PageLoad = async ({ params, fetch, url }) => {
 		error(500, itemsData.error);
 	}
 
-	// simulate .pagination
-	const offset = 40;
-	const limit = 10;
+	// Pagination
+	// TODO: Ove sve default vrijednosti bi trebalo imat negdje centralno jer ih rucno koristim i na frontendu i na backendu na vise mjesta
+	const totalItems =
+		data.data.siblings.find((s) => s.id === data.data.selectedCategory.id)?.totalItems || 500;
+	const offset = Number(url.searchParams.get('offset')) || 0; // Does NaN get turned into a falsy value and 0 is the default? A: Yes
+	const max = Number(url.searchParams.get('max')) || 5;
 
-	const currentPage = Math.floor(offset / limit) + 1;
-	// const totalPages = Math.ceil(itemsData.data.length / limit);
-	const totalPages = Math.ceil(500 / limit);
-	// END simulate .pagination
+	const currentPage = Math.floor(offset / max) + 1;
+	const totalPages = Math.ceil(totalItems / max);
 
 	return {
 		title: 'Kategorije page',
@@ -40,9 +41,10 @@ export const load: PageLoad = async ({ params, fetch, url }) => {
 		items: itemsData.data,
 		pagination: {
 			offset,
-			limit,
+			limit: max,
 			currentPage,
-			totalPages
+			totalPages,
+			totalItems
 		}
 	};
 };

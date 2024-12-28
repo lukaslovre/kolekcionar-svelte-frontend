@@ -22,6 +22,8 @@ type filtersFormType =
 			validator: (value: any) => boolean;
 	  };
 
+type defaultOptionsKeys = 'max' | 'offset' | 'sort' | 'sortBy';
+
 function numberValidator(value: any): boolean {
 	return typeof value === 'number' && !isNaN(value);
 }
@@ -44,7 +46,7 @@ class FilterStore {
 		duljina: 'number'
 	};
 
-	private defaultOptions = {
+	private defaultOptions: Record<defaultOptionsKeys, any> = {
 		max: 5,
 		offset: 0,
 		sort: 'desc',
@@ -76,7 +78,7 @@ class FilterStore {
 			type: 'string',
 			value: undefined,
 			parser: (value: string) => value.trim(),
-			validator: (value: any) => true
+			validator: (value: any) => value.length > 0
 		}
 	];
 
@@ -84,7 +86,7 @@ class FilterStore {
 	filters = $state(this.defaultFilters);
 
 	// For setting the non-filter options
-	setOptions = (key: string, value: any) => {
+	setOptions = (key: defaultOptionsKeys, value: any) => {
 		// Validate key
 		if (!(key in this.defaultOptions)) {
 			throw new Error(`Option ${key} is not allowed`);
