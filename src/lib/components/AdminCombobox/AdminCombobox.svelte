@@ -2,6 +2,7 @@
 	import Checkmark from '$lib/icons/Checkmark.svelte';
 	import Chevron from '$lib/icons/Chevron.svelte';
 	import Search from '$lib/icons/Search.svelte';
+	import { tick } from 'svelte';
 
 	type AdminComboboxProps = {
 		label: string;
@@ -30,6 +31,7 @@
 	let searchValue: string = $state('');
 	// let showForm: boolean = $state(false);
 	let containerRef: HTMLDivElement | undefined = $state();
+	let searchInputRef: HTMLInputElement | undefined = $state();
 	let errorMessage: string = $state('');
 	let focusedOptionIndex: number = $state(-1);
 
@@ -87,12 +89,28 @@
 		}
 	}
 
+	function resetKeyboardFocus() {
+		focusedOptionIndex = -1;
+	}
+
+	async function openDropdownAndFocus() {
+		isOpen = true;
+		resetKeyboardFocus();
+		await tick(); // Wait for DOM to update so the input exists
+		searchInputRef?.focus();
+	}
+
+	function closeDropdown() {
+		isOpen = false;
+		errorMessage = '';
+		resetKeyboardFocus();
+	}
+
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.key === 'ArrowDown') {
 			event.preventDefault();
 			if (!isOpen) {
-				isOpen = true;
-				focusedOptionIndex = -1;
+				openDropdownAndFocus();
 			} else {
 				focusedOptionIndex = (focusedOptionIndex + 1) % filteredOptions.length;
 			}
@@ -103,12 +121,15 @@
 					(focusedOptionIndex - 1 + filteredOptions.length) % filteredOptions.length;
 			}
 		} else if (event.key === 'Enter' || event.key === ' ') {
-			event.preventDefault();
 			if (isOpen && focusedOptionIndex >= 0) {
+				event.preventDefault();
 				toggleValue(filteredOptions[focusedOptionIndex].value);
 			}
 		} else if (event.key === 'Escape') {
-			isOpen = false;
+			event.preventDefault();
+			closeDropdown();
+		} else {
+			resetKeyboardFocus(); // Reset focus when typing
 		}
 	}
 </script>
@@ -125,8 +146,7 @@
 		aria-controls="combobox-options"
 		aria-labelledby="combobox-label"
 		onclick={() => {
-			isOpen = !isOpen;
-			focusedOptionIndex = -1;
+			isOpen ? closeDropdown() : openDropdownAndFocus();
 		}}
 		onkeydown={handleKeyDown}
 	>
@@ -157,10 +177,12 @@
 					placeholder="Search"
 					autocomplete="off"
 					class="flex-1 rounded-sm text-sm font-normal outline-none"
+					bind:this={searchInputRef}
 					bind:value={searchValue}
 					oninput={() => {
 						errorMessage = '';
 					}}
+					onkeydown={handleKeyDown}
 				/>
 
 				{#if filteredOptions.length === 0}
@@ -190,6 +212,9 @@
 						: 'hover:bg-neutral-100'}"
 					onclick={() => {
 						toggleValue(value);
+					}}
+					onmouseenter={() => {
+						resetKeyboardFocus();
 					}}
 				>
 					<Checkmark color={selectedValues.includes(value) ? '#000' : 'transparent'} />
