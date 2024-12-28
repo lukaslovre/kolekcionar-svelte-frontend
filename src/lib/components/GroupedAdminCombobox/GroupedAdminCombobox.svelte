@@ -4,6 +4,7 @@
 	import Search from '$lib/icons/Search.svelte';
 	import kolekcionarApi from '$lib/kolekcionarApi';
 	import { getHoverInfoFromTag } from '$lib/utils/tagUtils';
+	import { tick } from 'svelte';
 	import AutocompleteInput from '../FormComponents/AutocompleteInput.svelte';
 	import Input from './Input.svelte';
 
@@ -28,6 +29,10 @@
 	let isOpen: boolean = $state(false);
 	let searchValue: string = $state('');
 	let showForm: boolean = $state(false);
+	let containerRef: HTMLDivElement | undefined = $state();
+	let searchInputRef: HTMLInputElement | undefined = $state();
+	let errorMessage: string = $state('');
+	let focusedOptionIndex: number = $state(-1);
 
 	let filteredOptions = $derived(
 		options
@@ -49,6 +54,23 @@
 	);
 
 	let flatOptions = $derived(options.flatMap((group) => group.options));
+	let flatFilteredOptions = $derived(filteredOptions.flatMap((group) => group.options));
+
+	$effect(() => {
+		if (containerRef) {
+			const handleClickOutside = (event: MouseEvent) => {
+				if (!containerRef!.contains(event.target as Node)) {
+					isOpen = false;
+				}
+			};
+
+			document.addEventListener('click', handleClickOutside);
+
+			return () => {
+				document.removeEventListener('click', handleClickOutside);
+			};
+		}
+	});
 
 	function toggleValue(value: string) {
 		const newSelectedValues = selectedValues.includes(value)
@@ -59,6 +81,7 @@
 		onSelectedChange(newSelectedValues);
 	}
 
+	// TODO: extract to parent component
 	async function handleAddOption(e: Event) {
 		e.preventDefault();
 
@@ -115,18 +138,64 @@
 			selectedValues = [...selectedValues, response.data.id];
 			onSelectedChange(selectedValues);
 			searchValue = '';
-			toggleFormVisibility();
-		} catch (error) {
+			toggleFormVisibility(e);
+		} catch (error: any) {
 			console.log(error);
+			errorMessage = error.message || 'An error occurred';
 		}
 	}
 
-	function toggleFormVisibility() {
+	function resetKeyboardFocus() {
+		focusedOptionIndex = -1;
+	}
+
+	async function openDropdownAndFocus() {
+		isOpen = true;
+		resetKeyboardFocus();
+		await tick(); // Wait for DOM to update so the input exists
+		searchInputRef?.focus();
+	}
+
+	function closeDropdown() {
+		isOpen = false;
+		errorMessage = '';
+		resetKeyboardFocus();
+	}
+
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.key === 'ArrowDown') {
+			event.preventDefault();
+			if (!isOpen) {
+				openDropdownAndFocus();
+			} else {
+				focusedOptionIndex = (focusedOptionIndex + 1) % flatFilteredOptions.length;
+			}
+		} else if (event.key === 'ArrowUp') {
+			event.preventDefault();
+			if (isOpen) {
+				focusedOptionIndex =
+					(focusedOptionIndex - 1 + flatFilteredOptions.length) % flatFilteredOptions.length;
+			}
+		} else if (event.key === 'Enter' || event.key === ' ') {
+			if (isOpen && focusedOptionIndex >= 0) {
+				event.preventDefault();
+				toggleValue(flatFilteredOptions[focusedOptionIndex].value);
+			}
+		} else if (event.key === 'Escape') {
+			event.preventDefault();
+			closeDropdown();
+		} else {
+			resetKeyboardFocus(); // Reset focus when typing
+		}
+	}
+
+	function toggleFormVisibility(e: Event) {
+		e.stopPropagation();
 		showForm = !showForm;
 	}
 </script>
 
-<div class="relative">
+<div class="relative" bind:this={containerRef}>
 	<button
 		class="w-full rounded-md border bg-white px-3 py-2 text-sm {isOpen
 			? 'border-orange-300 ring ring-orange-100'
@@ -138,8 +207,9 @@
 		aria-controls="combobox-options"
 		aria-labelledby="combobox-label"
 		onclick={() => {
-			isOpen = !isOpen;
+			isOpen ? closeDropdown() : openDropdownAndFocus();
 		}}
+		onkeydown={handleKeyDown}
 	>
 		{#if selectedValues.length > 0}
 			{selectedValues
@@ -157,7 +227,7 @@
 		<div
 			id="combobox-options"
 			role="listbox"
-			class="absolute top-full z-10 mt-2 flex max-h-96 w-full flex-col gap-1 overflow-y-auto rounded-md border border-neutral-400 bg-neutral-50 p-1 shadow-md"
+			class="absolute top-full z-10 mt-2 flex max-h-96 w-full flex-col gap-1 overflow-y-auto rounded-md border border-neutral-400 bg-white p-1 shadow-md"
 		>
 			{#if showForm}
 				<!-- Close form button -->
@@ -202,18 +272,29 @@
 						type="text"
 						placeholder="Search"
 						autocomplete="off"
-						class="flex-1 rounded-sm bg-neutral-50 text-sm font-normal outline-none"
+						class="flex-1 rounded-sm text-sm font-normal outline-none"
+						bind:this={searchInputRef}
 						bind:value={searchValue}
+						oninput={() => {
+							errorMessage = '';
+						}}
+						onkeydown={handleKeyDown}
 					/>
 
 					{#if filteredOptions.length === 0}
 						<button
 							type="button"
 							class="text-sm font-semibold text-sky-700"
-							onclick={toggleFormVisibility}>Create "{searchValue}"</button
+							onclick={toggleFormVisibility}
 						>
+							{`Create "${searchValue}"`}
+						</button>
 					{/if}
 				</div>
+
+				{#if errorMessage !== ''}
+					<p class="px-3 py-2 text-sm text-red-500">{errorMessage}</p>
+				{/if}
 
 				<!-- Options -->
 				{#each filteredOptions as { groupName, options } (groupName)}
@@ -223,13 +304,18 @@
 						<button
 							type="button"
 							role="option"
-							aria-selected={selectedValues.includes(value)}
-							class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm font-normal hover:bg-neutral-100"
+							aria-selected={selectedValues.includes(value) ||
+								focusedOptionIndex ===
+									flatFilteredOptions.findIndex((option) => option.value === value)}
+							class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm font-normal {focusedOptionIndex ===
+							flatFilteredOptions.findIndex((option) => option.value === value)
+								? 'bg-neutral-100'
+								: 'hover:bg-neutral-100'}"
 							onclick={() => {
 								toggleValue(value);
 							}}
 							onmouseenter={() => {
-								// console.log(JSON.parse(hoverInfo));
+								resetKeyboardFocus();
 							}}
 						>
 							<Checkmark color={selectedValues.includes(value) ? '#000' : 'transparent'} />

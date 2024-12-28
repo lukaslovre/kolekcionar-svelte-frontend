@@ -21,6 +21,12 @@
 	let containerRef: HTMLDivElement | undefined = $state();
 	let focusedOptionIndex: number = $state(-1);
 
+	let viableAutocompleteOptions = $derived(
+		showOptionsIfValueEmpty && !value
+			? autocompleteOptions
+			: autocompleteOptions.filter((option) => option.toLowerCase().includes(value.toLowerCase()))
+	);
+
 	$effect(() => {
 		if (containerRef) {
 			const handleClickOutside = (event: MouseEvent) => {
@@ -42,12 +48,6 @@
 			onInput(value);
 		}
 	});
-
-	let viableAutocompleteOptions = $derived(
-		showOptionsIfValueEmpty && !value
-			? autocompleteOptions
-			: autocompleteOptions.filter((option) => option.toLowerCase().includes(value.toLowerCase()))
-	);
 
 	function setValue(newValue: string) {
 		value = newValue;
@@ -115,7 +115,10 @@
 						index
 							? 'bg-neutral-100'
 							: 'hover:bg-neutral-100'}"
-						onclick={() => setValue(option)}
+						onclick={(e) => {
+							e.stopPropagation();
+							setValue(option);
+						}}
 					>
 						{option}
 					</button>

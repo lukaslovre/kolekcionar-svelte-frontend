@@ -1,5 +1,4 @@
 <script lang="ts">
-	import AdminCombobox from '$lib/components/AdminCombobox/AdminCombobox.svelte';
 	import GroupedAdminCombobox from '$lib/components/GroupedAdminCombobox/GroupedAdminCombobox.svelte';
 	import kolekcionarApi from '$lib/kolekcionarApi';
 	import { getHoverInfoFromTag } from '$lib/utils/tagUtils';
