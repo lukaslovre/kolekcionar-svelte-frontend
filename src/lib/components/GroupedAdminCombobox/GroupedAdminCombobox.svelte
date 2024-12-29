@@ -2,12 +2,9 @@
 	import Checkmark from '$lib/icons/Checkmark.svelte';
 	import Chevron from '$lib/icons/Chevron.svelte';
 	import Search from '$lib/icons/Search.svelte';
-	import kolekcionarApi from '$lib/kolekcionarApi';
-	import { getHoverInfoFromTag } from '$lib/utils/tagUtils';
 	import { tick } from 'svelte';
 	import AutocompleteInput from '../FormComponents/AutocompleteInput.svelte';
 	import Input from './Input.svelte';
-	import { error } from '@sveltejs/kit';
 
 	type CreateTag = Omit<Tag, 'id' | 'items'>;
 
@@ -24,10 +21,17 @@
 
 		selectedValues: string[];
 		onSelectedChange: (selectedValues: string[]) => void;
-		onAddOption: (tag: CreateTag) => Promise<string>; // Returns the ID of the newly created tag
+		onAddOption?: (tag: CreateTag) => Promise<string>; // Returns the ID of the newly created tag
+		adminMode?: boolean;
 	};
-	let { label, options, selectedValues, onSelectedChange, onAddOption }: AdminComboboxProps =
-		$props();
+	let {
+		label,
+		options,
+		selectedValues,
+		onSelectedChange,
+		onAddOption,
+		adminMode = true
+	}: AdminComboboxProps = $props();
 
 	let isOpen: boolean = $state(false);
 	let searchValue: string = $state('');
@@ -87,6 +91,7 @@
 	// TODO: extract to parent component
 	async function handleAddOption(e: Event) {
 		e.preventDefault();
+		if (!onAddOption) return;
 
 		// Prepare the data for the API
 		const formData = new FormData(e.target as HTMLFormElement);
@@ -109,8 +114,7 @@
 		// Call the callback to create the tag
 		try {
 			const newTagId = await onAddOption(newTag);
-			// selectedValues = [...selectedValues, newTagId];
-			toggleValue(newTagId); // Test this
+			toggleValue(newTagId);
 
 			searchValue = '';
 			errorMessage = '';
@@ -205,7 +209,7 @@
 			role="listbox"
 			class="absolute top-full z-10 mt-2 flex max-h-96 w-full flex-col gap-1 overflow-y-auto rounded-md border border-neutral-400 bg-white p-1 shadow-md"
 		>
-			{#if showForm}
+			{#if showForm && adminMode}
 				<!-- Close form button -->
 				<button
 					type="button"
@@ -257,7 +261,7 @@
 						onkeydown={handleKeyDown}
 					/>
 
-					{#if filteredOptions.length === 0}
+					{#if filteredOptions.length === 0 && adminMode}
 						<button
 							type="button"
 							class="text-sm font-semibold text-sky-700"

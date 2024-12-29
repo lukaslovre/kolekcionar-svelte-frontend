@@ -20,6 +20,14 @@ type filtersFormType =
 			value: string | undefined;
 			parser: (value: string) => any;
 			validator: (value: any) => boolean;
+	  }
+	| {
+			field: string;
+			label: string;
+			type: 'string[]';
+			value: string[] | undefined;
+			parser: (value: string) => any;
+			validator: (value: any) => boolean;
 	  };
 
 type defaultOptionsKeys = 'max' | 'offset' | 'sort' | 'sortBy';
@@ -79,6 +87,14 @@ class FilterStore {
 			value: undefined,
 			parser: (value: string) => value.trim(),
 			validator: (value: any) => value.length > 0
+		},
+		{
+			field: 'tags',
+			label: 'Tags',
+			type: 'string[]',
+			value: [],
+			parser: (value: string) => value,
+			validator: (value: any) => Array.isArray(value)
 		}
 	];
 
@@ -115,6 +131,8 @@ class FilterStore {
 				this.filters[fieldIndex].max = value;
 			}
 		} else if (this.filters[fieldIndex].type === 'string') {
+			this.filters[fieldIndex].value = value;
+		} else if (this.filters[fieldIndex].type === 'string[]') {
 			this.filters[fieldIndex].value = value;
 		} else {
 			throw new Error(`Filter ${key} has invalid type`);
@@ -153,9 +171,11 @@ class FilterStore {
 				}
 			} else if (filter.type === 'string') {
 				return { ...filter, value };
+			} else if (filter.type === 'string[]') {
+				return { ...filter, value: value.split(',') };
+			} else {
+				return filter;
 			}
-
-			return filter;
 		});
 
 		this.options = newOptions;
@@ -175,6 +195,8 @@ class FilterStore {
 		// Rules for filters:
 		// if its type = number, use this format: `${min}-${max}` (e.g. 10-20, 10-, -20)
 		// if its type = string, use this format: `${value}`
+		// if its type = string[], use this format: `${value1},${value2},${value3}`
+
 		for (const filter of this.filters) {
 			if (filter.type === 'number') {
 				if (filter.min || filter.max) {
@@ -184,6 +206,10 @@ class FilterStore {
 			} else if (filter.type === 'string') {
 				if (filter.value) {
 					urlParams.set(filter.field, filter.value);
+				}
+			} else if (filter.type === 'string[]') {
+				if (filter.value) {
+					urlParams.set(filter.field, filter.value.join(','));
 				}
 			}
 		}
@@ -197,6 +223,8 @@ class FilterStore {
 		const filters = this.filters.map((filter) => {
 			if (filter.type === 'number') {
 				return `${filter.field}: ${filter.min} - ${filter.max}`;
+			} else if (filter.type === 'string[]') {
+				return `${filter.field}: ${filter.value?.join(', ')}`;
 			} else {
 				return `${filter.field}: ${filter.value}`;
 			}

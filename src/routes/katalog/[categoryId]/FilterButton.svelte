@@ -18,6 +18,7 @@ Effect runs on mount, causing unnecessary navigation
 No error handling for invalid URLs -->
 
 <script lang="ts">
+	import TagsComboboxReadonly from '$lib/components/wrappedComponents/TagsCombobox/TagsComboboxReadonly.svelte';
 	import { filterStore } from './filterStore.svelte';
 
 	let dropdownOpen: boolean = $state(false);
@@ -42,8 +43,6 @@ No error handling for invalid URLs -->
 	}
 
 	function handleSubmitClick() {
-		// TODO TOMMOROW:
-		// treba vidjet kako rjesavat min-max brojeve, dali u store-u imat oboje, ili ovdje na temelju vrijednosti složit ispravan string
 		filterStore.setUrlFromState();
 	}
 </script>
@@ -65,9 +64,9 @@ No error handling for invalid URLs -->
 		>
 			<ul class="flex flex-col">
 				{#each filterStore.filters as filter}
-					{#if filter.type === 'number'}
-						<li>
-							<div class="flex flex-col gap-2 px-4 py-2">
+					<li>
+						<div class="flex flex-col gap-2 px-4 py-2">
+							{#if filter.type === 'number'}
 								<p class="text-sm font-semibold text-neutral-800">{filter.label}</p>
 								<div class="flex gap-4">
 									{#each range as range}
@@ -82,13 +81,9 @@ No error handling for invalid URLs -->
 										/>
 									{/each}
 								</div>
-							</div>
-						</li>
-					{:else if filter.type === 'string'}
-						<li>
-							<div class="flex flex-col gap-2 px-4 py-2">
+							{:else if filter.type === 'string'}
 								<p class="text-sm font-semibold text-neutral-800">{filter.label}</p>
-								<div class="flex gap-4">
+								<div>
 									<input
 										type="text"
 										placeholder="Unesite vrijednost"
@@ -99,9 +94,28 @@ No error handling for invalid URLs -->
 										value={filter.value ?? ''}
 									/>
 								</div>
-							</div>
-						</li>
-					{/if}
+							{:else if filter.type === 'string[]'}
+								<!-- Tags custom input -->
+								{#if filter.field === 'tags'}
+									<p class="text-sm font-semibold text-neutral-800">{filter.label}</p>
+									<div>
+										<TagsComboboxReadonly
+											selectedValues={filter.value ?? []}
+											onSelectedChange={(comboboxValues) => {
+												filterStore.setFilter(
+													filter.field,
+													filter.validator(comboboxValues) ? comboboxValues : [],
+													'exact'
+												);
+											}}
+										/>
+									</div>
+								{:else}
+									<p>Unsupported filter type: {filter.type} {filter.field}</p>
+								{/if}
+							{/if}
+						</div>
+					</li>
 				{/each}
 
 				<li class="mt-4">
