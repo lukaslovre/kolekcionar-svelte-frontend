@@ -7,6 +7,7 @@
 	import { tick } from 'svelte';
 	import AutocompleteInput from '../FormComponents/AutocompleteInput.svelte';
 	import Input from './Input.svelte';
+	import { error } from '@sveltejs/kit';
 
 	type CreateTag = Omit<Tag, 'id' | 'items'>;
 
@@ -87,6 +88,7 @@
 	async function handleAddOption(e: Event) {
 		e.preventDefault();
 
+		// Prepare the data for the API
 		const formData = new FormData(e.target as HTMLFormElement);
 
 		const newTag: CreateTag = {
@@ -104,12 +106,14 @@
 			return;
 		}
 
+		// Call the callback to create the tag
 		try {
 			const newTagId = await onAddOption(newTag);
-			selectedValues = [...selectedValues, newTagId];
+			// selectedValues = [...selectedValues, newTagId];
+			toggleValue(newTagId); // Test this
 
-			onSelectedChange(selectedValues);
 			searchValue = '';
+			errorMessage = '';
 			toggleFormVisibility(e);
 		} catch (error: any) {
 			console.log(error);

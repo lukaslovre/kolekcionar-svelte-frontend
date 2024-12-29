@@ -26,7 +26,7 @@
 		joinImageToDirection
 	}: ComponentProps = $props();
 
-	let additionalDataVisible: boolean = $state(false);
+	let additionalDataVisible: boolean = $state(true);
 </script>
 
 <div class="w-80 flex-shrink-0">

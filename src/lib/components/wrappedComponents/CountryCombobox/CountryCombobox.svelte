@@ -1,6 +1,7 @@
 <script lang="ts">
 	import AdminCombobox from '$lib/components/AdminCombobox/AdminCombobox.svelte';
 	import kolekcionarApi from '$lib/kolekcionarApi';
+	import { countryComboboxStore } from './CountryComboboxStore.svelte';
 
 	let {
 		onSelectedChange
@@ -8,31 +9,20 @@
 		onSelectedChange: (comboboxValues: string[]) => void;
 	} = $props();
 
-	let countryOptions: Country[] = $state([]);
-
-	$inspect(countryOptions);
-
+	// Format the country options in the way that the AdminCombobox expects
 	let comboboxOptions: { label: string; value: string }[] = $derived(
-		countryOptions.map((country) => ({
+		countryComboboxStore.countryOptions.map((country) => ({
 			label: country.name,
 			value: country.id
 		}))
 	);
 
-	// On mount, fetch tags list
-	$effect(() => {
-		kolekcionarApi.getCountriesList().then((countries) => {
-			countryOptions = countries.data;
-		});
-	});
+	$inspect(comboboxOptions);
 
-	async function onAddOption(optionLabel: string) {
+	async function onAddOption(optionLabel: string): Promise<string> {
 		throw new Error('Not implemented');
 
-		return {
-			label: optionLabel,
-			value: optionLabel.toLowerCase().replace(/\s/g, '-')
-		};
+		return '';
 	}
 </script>
 

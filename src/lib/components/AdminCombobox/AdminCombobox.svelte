@@ -13,10 +13,7 @@
 		selectedValues: string[];
 		allowMultiple?: boolean;
 		onSelectedChange: (selectedValues: string[]) => void;
-		onAddOption: (optionLabel: string) => Promise<{
-			label: string;
-			value: string;
-		}>;
+		onAddOption: (optionLabel: string) => Promise<string>; // ID of the newly created option
 	};
 	let {
 		label,
@@ -74,18 +71,15 @@
 
 	async function handleAddOption() {
 		try {
-			if (options.some((option) => option.label.toLowerCase() === searchValue.toLowerCase())) {
-				errorMessage = 'Option already exists.';
-				return;
-			}
+			const newOptionId = await onAddOption(searchValue);
 
-			const newOption = await onAddOption(searchValue);
-			options = [...options, newOption];
+			toggleValue(newOptionId);
+
 			searchValue = '';
 			errorMessage = '';
-		} catch (error) {
-			errorMessage = 'Failed to add new option.';
-			console.error(error);
+		} catch (error: any) {
+			console.log(error);
+			errorMessage = error.message || 'Failed to add new option.';
 		}
 	}
 

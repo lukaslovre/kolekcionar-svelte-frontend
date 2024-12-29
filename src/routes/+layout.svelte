@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { page } from '$app/state';
 	import { tagsComboboxStore } from '$lib/components/wrappedComponents/TagsCombobox/TagsComboboxStore.svelte';
+	import { countryComboboxStore } from '$lib/components/wrappedComponents/CountryCombobox/CountryComboboxStore.svelte';
 
 	let { children } = $props();
 
@@ -15,6 +16,7 @@
 
 	// Initialize stores for global state
 	void tagsComboboxStore.initializeStore();
+	void countryComboboxStore.initializeStore();
 </script>
 
 <header class="flex justify-center border-b border-black/25 bg-orange-200 px-8 py-4 shadow-md">
